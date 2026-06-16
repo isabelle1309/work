@@ -1,12 +1,16 @@
 import { db, auth } from "./firebase.js";
-import {
-    collection, addDoc, getDocs, query, orderBy, updateDoc, doc, Timestamp
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { collection, addDoc, getDocs, query, orderBy, updateDoc, doc, Timestamp, limit } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const shiftsRef = collection(db, "shifts");
 
 async function getOpenShift() {
-    const q = query(shiftsRef, orderBy("checkIn", "desc"));
+    const q = query(
+        shiftsRef,
+        orderBy("checkIn", "desc"),
+        limit(20)
+    );
+
     const snap = await getDocs(q);
 
     for (const d of snap.docs) {
@@ -50,10 +54,13 @@ async function updateUIState() {
 
 document.getElementById("startBtn").onclick = async () => {
 
+    document.getElementById("startBtn").disabled = true;
+
     const openShift = await getOpenShift();
 
     if (openShift) {
         alert("You already have an active shift!");
+        updateUIState();
         return;
     }
 
@@ -87,6 +94,7 @@ document.getElementById("endBtn").onclick = async () => {
 };
 
 async function loadTable() {
+
     const q = query(shiftsRef, orderBy("checkIn", "desc"));
     const snap = await getDocs(q);
 
@@ -97,10 +105,13 @@ async function loadTable() {
     table.innerHTML = "";
 
     snap.forEach(d => {
+
         const data = d.data();
 
         const inTime = data.checkIn ? data.checkIn.toDate() : null;
         const outTime = data.checkOut ? data.checkOut.toDate() : null;
+
+        const isOpen = !outTime;
 
         let hours = 0;
         if (inTime && outTime) {
@@ -119,7 +130,7 @@ async function loadTable() {
         const formattedDate = formatDate(data.date);
 
         const row = `
-        <tr>
+        <tr class="${isOpen ? "table-warning" : ""}">
             <td>${formattedDate}</td>
             <td>${inTime ? formatTime(inTime) : "-"}</td>
             <td>${outTime ? formatTime(outTime) : "-"}</td>
@@ -135,7 +146,7 @@ async function loadTable() {
 
             <td>${weighted.toFixed(2)}</td>
             <td>${data.monthId}</td>
-            <td>€${earnings.toFixed(2)}</td>
+            <td class="fw-bold text-success">€${earnings.toFixed(2)}</td>
         </tr>
         `;
 
@@ -152,6 +163,7 @@ async function loadTable() {
 }
 
 document.getElementById("tableBody").addEventListener("change", async (event) => {
+
     if (!event.target.classList.contains("pay-percent")) return;
 
     const id = event.target.dataset.id;
