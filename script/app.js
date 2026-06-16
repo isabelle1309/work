@@ -5,6 +5,17 @@ import {
 
 const shiftsRef = collection(db, "shifts");
 
+async function getOpenShift() {
+    const q = query(shiftsRef, orderBy("checkIn", "desc"));
+    const snap = await getDocs(q);
+
+    for (const d of snap.docs) {
+        if (!d.data().checkOut) return d;
+    }
+
+    return null;
+}
+
 function formatTime(date) {
     return date.toLocaleTimeString("fi-FI", {
         hour: "2-digit",
@@ -30,7 +41,22 @@ function formatDate(dateString) {
     return `${weekday}, ${rest}`;
 }
 
+async function updateUIState() {
+    const openShift = await getOpenShift();
+
+    document.getElementById("startBtn").disabled = !!openShift;
+    document.getElementById("endBtn").disabled = !openShift;
+}
+
 document.getElementById("startBtn").onclick = async () => {
+
+    const openShift = await getOpenShift();
+
+    if (openShift) {
+        alert("You already have an active shift!");
+        return;
+    }
+
     const now = new Date();
 
     await addDoc(shiftsRef, {
@@ -45,10 +71,8 @@ document.getElementById("startBtn").onclick = async () => {
 };
 
 document.getElementById("endBtn").onclick = async () => {
-    const q = query(shiftsRef, orderBy("checkIn", "desc"));
-    const snap = await getDocs(q);
 
-    const openShift = snap.docs.find(d => !d.data().checkOut);
+    const openShift = await getOpenShift();
 
     if (!openShift) {
         alert("No active shift");
@@ -123,6 +147,8 @@ async function loadTable() {
 
     document.getElementById("totalEarnings").innerText =
         totalEarnings.toFixed(2);
+
+    updateUIState();
 }
 
 document.getElementById("tableBody").addEventListener("change", async (event) => {
