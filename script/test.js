@@ -2,24 +2,42 @@ import { db }
 from "./modules/firebase.js";
 import { getFirestore, collection, addDoc, getDocs }
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-const button = document.getElementById("createBtn");
+const auth = getAuth(app);
 
-button.addEventListener("click", ()=>{
-    event.preventDefault();
-    addUser();
-})
-
-async function addUser() {
+async function register(email, password) {
     try {
-        const docRef = await addDoc(collection(db, "users"), {
-            name: "Isabelle",
-            age: 21,
-            createdAt: new Date()
-        });
-
-        console.log("Document written with ID:", docRef.id);
-    } catch (e) {
-        console.error("Error adding document:", e);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        console.log("User created:", userCredential.user);
+    } catch (error) {
+        console.error(error.message);
     }
+}
+
+async function login(email, password) {
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        console.log("Logged in:", userCredential.user);
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        console.log("Logged in as:", user.email);
+    } else {
+        console.log("Not logged in");
+    }
+});
+
+async function logout() {
+    await signOut(auth);
 }
