@@ -14,6 +14,22 @@ function formatTime(date) {
     });
 }
 
+function formatDate(dateString) {
+    const date = new Date(dateString);
+
+    const weekday = date.toLocaleDateString("fi-FI", {
+        weekday: "long"
+    });
+
+    const rest = date.toLocaleDateString("fi-FI", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    });
+
+    return `${weekday}, ${rest}`;
+}
+
 document.getElementById("startBtn").onclick = async () => {
     const now = new Date();
 
@@ -59,8 +75,8 @@ async function loadTable() {
     snap.forEach(d => {
         const data = d.data();
 
-        const inTime = data.checkIn?.toDate();
-        const outTime = data.checkOut?.toDate();
+        const inTime = data.checkIn ? data.checkIn.toDate() : null;
+        const outTime = data.checkOut ? data.checkOut.toDate() : null;
 
         let hours = 0;
         if (inTime && outTime) {
@@ -69,21 +85,14 @@ async function loadTable() {
 
         const payPercent = data.payPercent ?? 100;
         const weighted = hours * (payPercent / 100);
+
         const hourlyRate = 17.3;
         const earnings = weighted * hourlyRate;
 
         totalHours += hours;
         totalEarnings += earnings;
 
-        const formattedDate = new Date(data.date).toLocaleDateString(
-            "fi-FI",
-            {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-                year: "numeric"
-            }
-        );
+        const formattedDate = formatDate(data.date);
 
         const row = `
         <tr>
@@ -114,19 +123,19 @@ async function loadTable() {
 
     document.getElementById("totalEarnings").innerText =
         totalEarnings.toFixed(2);
-
-    document.querySelectorAll(".pay-percent").forEach(select => {
-        select.addEventListener("change", async (event) => {
-            const id = event.target.dataset.id;
-            const payPercent = Number(event.target.value);
-
-            await updateDoc(doc(db, "shifts", id), {
-                payPercent
-            });
-
-            loadTable();
-        });
-    });
 }
+
+document.getElementById("tableBody").addEventListener("change", async (event) => {
+    if (!event.target.classList.contains("pay-percent")) return;
+
+    const id = event.target.dataset.id;
+    const payPercent = Number(event.target.value);
+
+    await updateDoc(doc(db, "shifts", id), {
+        payPercent
+    });
+
+    loadTable();
+});
 
 loadTable();
