@@ -12,12 +12,17 @@ import {
 
 const shiftsRef = collection(db, "shifts");
 
+function formatTime(date) {
+    return date.toLocaleTimeString("fi-FI", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+    });
+}
+
 document.getElementById("startBtn").onclick = async () => {
     const now = new Date();
-
-    const payPercent = Number(
-        document.getElementById("payPercent").value
-    );
 
     await addDoc(shiftsRef, {
         date: now.toISOString().split("T")[0],
