@@ -1,15 +1,33 @@
 <h1>Dashboard</h1>
 
+<button id="startBtn">Start Shift</button>
+<button id="endBtn">End Shift</button>
+
+<h3>Total Hours: <span id="totalHours">0</span></h3>
+<h3>Total Earnings: €<span id="totalEarnings">0</span></h3>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Check In</th>
+            <th>Check Out</th>
+            <th>Hours</th>
+            <th>Pay %</th>
+            <th>Weighted</th>
+            <th>Month</th>
+            <th>Earnings</th>
+        </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+</table>
+
 <button id="logoutBtn">Logout</button>
 
 <script type="module">
 import { auth } from "./script/firebase.js";
 import { signOut, onAuthStateChanged } 
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-import { db } from "./script/firebase.js";
-import { collection, addDoc } 
-from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 onAuthStateChanged(auth, (user) => {
     if (!user) {
@@ -21,11 +39,7 @@ document.getElementById("logoutBtn").onclick = async () => {
     await signOut(auth);
     window.location.href = "/index.html";
 };
-
-window.addData = async () => {
-    await addDoc(collection(db, "data"), {
-        text: "hello",
-        time: new Date()
-    });
-};
 </script>
+
+<!-- MAIN APP LOGIC -->
+<script type="module" src="./script/app.js"></script>
