@@ -1,5 +1,5 @@
 import { db } 
-from "./modules/firebase.js";
+from "./firebase.js";
 import { getFirestore, collection, addDoc, getDocs }
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import {
