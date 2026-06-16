@@ -8,9 +8,11 @@ const loginBox = document.getElementById("loginBox");
 const appBox = document.getElementById("app");
 
 document.getElementById("loginBtn").onclick = async () => {
-    const email = document.getElementById("email").value;
+    const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
+    console.log("EMAIL:", email);
+    console.log("PASSWORD LENGTH:", password.length);
     await login(email, password);
 };
 

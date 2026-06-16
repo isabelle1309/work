@@ -21,13 +21,22 @@ async function register(email, password) {
     }
 }
 
-async function login(email, password) {
-    try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        console.log("Logged in:", userCredential.user);
-    } catch (error) {
-        console.error(error.message);
+export async function login(email, password) {
+    email = email.trim();
+
+    if (!email.includes("@")) {
+        alert("Invalid email format");
+        return;
     }
+
+    if (!password) {
+        alert("Password required");
+        return;
+    }
+
+    const result = await signInWithEmailAndPassword(auth, email, password);
+
+    return result.user;
 }
 
 onAuthStateChanged(auth, (user) => {
