@@ -1,3 +1,9 @@
+<style>
+    html {
+        font-size: clamp(14px, 1.2vw, 18px);
+    }
+</style>
+
 <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,31 +45,31 @@
 </div>
 
 <script type="module">
-import { auth } from "./script/firebase.js";
-import { signInWithEmailAndPassword } 
-from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { auth } from "./script/firebase.js";
+    import { signInWithEmailAndPassword }
+        from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-const errorMsg = document.getElementById("errorMsg");
+    const errorMsg = document.getElementById("errorMsg");
 
-document.getElementById("email").focus();
+    document.getElementById("email").focus();
 
-document.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") document.getElementById("loginBtn").click();
-});
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") document.getElementById("loginBtn").click();
+    });
 
-document.getElementById("loginBtn").onclick = async () => {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+    document.getElementById("loginBtn").onclick = async () => {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
 
-    try {
-        errorMsg.textContent = "";
+        try {
+            errorMsg.textContent = "";
 
-        await signInWithEmailAndPassword(auth, email, password);
+            await signInWithEmailAndPassword(auth, email, password);
 
-        window.location.href = "/app.html";
+            window.location.href = "/app.html";
 
-    } catch (e) {
-        errorMsg.textContent = "Login failed. Check your credentials.";
-    }
-};
+        } catch (e) {
+            errorMsg.textContent = "Login failed. Check your credentials.";
+        }
+    };
 </script>
