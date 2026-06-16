@@ -1,5 +1,5 @@
 import { db } from "./firebase.js";
-import { collection, addDoc } 
+import { collection, addDoc }
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 import { login, logout, watchAuth } from "./auth.js";
@@ -8,12 +8,14 @@ const loginBox = document.getElementById("loginBox");
 const appBox = document.getElementById("app");
 
 document.getElementById("loginBtn").onclick = async () => {
-    const email = document.getElementById("email").value.trim();
+    const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
-    console.log("EMAIL:", email);
-    console.log("PASSWORD LENGTH:", password.length);
-    await login(email, password);
+    try {
+        await login(email, password);
+    } catch (e) {
+        alert(e.message);
+    }
 };
 
 document.getElementById("logoutBtn").onclick = async () => {

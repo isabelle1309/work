@@ -5,18 +5,9 @@ import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-const allowedEmail = "you@example.com";
-
 export async function login(email, password) {
-    const result = await signInWithEmailAndPassword(auth, email, password);
-
-    if (result.user.email !== allowedEmail) {
-        alert("Not allowed");
-        await signOut(auth);
-        return null;
-    }
-
-    return result.user;
+    email = email.trim();
+    return await signInWithEmailAndPassword(auth, email, password);
 }
 
 export function logout() {
@@ -25,10 +16,6 @@ export function logout() {
 
 export function watchAuth(callback) {
     onAuthStateChanged(auth, (user) => {
-        if (user && user.email === allowedEmail) {
-            callback(user);
-        } else {
-            callback(null);
-        }
+        callback(user);
     });
 }
