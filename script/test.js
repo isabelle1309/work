@@ -1,3 +1,10 @@
+const button = document.getElementById("createBtn");
+
+button.addEventListener("click", ()=>{
+    event.preventDefault();
+    addUser();
+})
+
 async function addUser() {
     try {
         const docRef = await addDoc(collection(db, "users"), {
@@ -11,10 +18,3 @@ async function addUser() {
         console.error("Error adding document:", e);
     }
 }
-
-const button = document.getElementById("createBtn");
-
-button.addEventListener("click", ()=>{
-    event.preventDefault();
-    addUser();
-})
