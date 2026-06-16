@@ -1,24 +1,23 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>:3</title>
-</head>
-<body>
+<h2>Login</h2>
 
-<div id="loginBox">
-    <h2>Login</h2>
-    <input id="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Password">
-    <button id="loginBtn">Login</button>
-</div>
+<input id="email" placeholder="email">
+<input id="password" type="password" placeholder="password">
+<button id="loginBtn">Login</button>
 
-<div id="app" style="display:none;">
-    <h2>Dashboard</h2>
-    <button id="addBtn">Add Data</button>
-    <button id="logoutBtn">Logout</button>
-</div>
+<script type="module">
+import { auth } from "./script/firebase.js";
+import { signInWithEmailAndPassword } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-<script type="module" src="./script/app.js"></script>
+document.getElementById("loginBtn").onclick = async () => {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-</body>
-</html>
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+        window.location.href = "/app.html";
+    } catch (e) {
+        alert("Login failed");
+    }
+};
+</script>
