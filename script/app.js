@@ -23,7 +23,7 @@ document.getElementById("startBtn").onclick = async () => {
         date: now.toISOString().split("T")[0],
         checkIn: Timestamp.fromDate(now),
         checkOut: null,
-        payPercent,
+        payPercent: 100,
         monthId: `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`
     });
 
@@ -78,7 +78,7 @@ async function loadTable() {
         totalEarnings += earnings;
 
         const formattedDate = new Date(data.date).toLocaleDateString(
-            "en-FI",
+            "fi-FI",
             {
                 weekday: "long",
                 day: "numeric",
@@ -90,13 +90,21 @@ async function loadTable() {
         const row = `
         <tr>
             <td>${formattedDate}</td>
-            <td>${inTime ? inTime.toLocaleTimeString() : "-"}</td>
-            <td>${outTime ? outTime.toLocaleTimeString() : "-"}</td>
+            <td>${inTime ? formatTime(inTime) : "-"}</td>
+            <td>${outTime ? formatTime(outTime) : "-"}</td>
             <td>${hours.toFixed(2)}</td>
-            <td>${payPercent}%</td>
+
+            <td>
+                <select class="pay-percent" data-id="${d.id}">
+                    <option value="100" ${payPercent === 100 ? "selected" : ""}>100%</option>
+                    <option value="125" ${payPercent === 125 ? "selected" : ""}>125%</option>
+                    <option value="200" ${payPercent === 200 ? "selected" : ""}>200%</option>
+                </select>
+            </td>
+
             <td>${weighted.toFixed(2)}</td>
             <td>${data.monthId}</td>
-            <td>${earnings.toFixed(2)}</td>
+            <td>€${earnings.toFixed(2)}</td>
         </tr>
         `;
 
@@ -108,6 +116,19 @@ async function loadTable() {
 
     document.getElementById("totalEarnings").innerText =
         totalEarnings.toFixed(2);
+
+    document.querySelectorAll(".pay-percent").forEach(select => {
+        select.addEventListener("change", async (event) => {
+            const id = event.target.dataset.id;
+            const payPercent = Number(event.target.value);
+
+            await updateDoc(doc(db, "shifts", id), {
+                payPercent
+            });
+
+            loadTable();
+        });
+    });
 }
 
 loadTable();
