@@ -86,8 +86,10 @@ document.getElementById("endBtn").onclick = async () => {
         return;
     }
 
+    const data = openShift.data();
+
     const checkOut = new Date();
-    const checkIn = openShift.checkIn.toDate();
+    const checkIn = data.checkIn.toDate();
 
     const hours = Number(
         ((checkOut - checkIn) / (1000 * 60 * 60)).toFixed(2)
@@ -95,7 +97,7 @@ document.getElementById("endBtn").onclick = async () => {
 
     await updateDoc(doc(db, "shifts", openShift.id), {
         checkOut: Timestamp.fromDate(checkOut),
-        hours: hours
+        hours
     });
 
     loadTable();
