@@ -1,6 +1,6 @@
 import { db, auth } from "./firebase.js";
-import { collection, addDoc, getDocs, query, orderBy, updateDoc, doc, Timestamp, limit } 
-from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { collection, addDoc, getDocs, query, orderBy, updateDoc, doc, Timestamp, limit }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const shiftsRef = collection(db, "shifts");
 
@@ -71,14 +71,14 @@ document.getElementById("startBtn").onclick = async () => {
         checkIn: Timestamp.fromDate(now),
         checkOut: null,
         payPercent: 100,
-        monthId: `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`
+        monthId: `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`,
+        hours: null
     });
 
     loadTable();
 };
 
 document.getElementById("endBtn").onclick = async () => {
-
     const openShift = await getOpenShift();
 
     if (!openShift) {
@@ -86,8 +86,16 @@ document.getElementById("endBtn").onclick = async () => {
         return;
     }
 
+    const checkOut = new Date();
+    const checkIn = openShift.checkIn.toDate();
+
+    const hours = Number(
+        ((checkOut - checkIn) / (1000 * 60 * 60)).toFixed(2)
+    );
+
     await updateDoc(doc(db, "shifts", openShift.id), {
-        checkOut: Timestamp.fromDate(new Date())
+        checkOut: Timestamp.fromDate(checkOut),
+        hours: hours
     });
 
     loadTable();
