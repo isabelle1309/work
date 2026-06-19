@@ -163,7 +163,7 @@ async function loadTable() {
             <td>${formattedDate}</td>
             <td>${inTime ? formatTime(inTime) : "-"}</td>
             <td>${outTime ? formatTime(outTime) : "-"}</td>
-            <td>${hours.toFixed(2)}</td>
+            <td class="hours">${hours.toFixed(2)}</td>
 
             <td>
                 <select class="pay-percent" data-id="${d.id}">
@@ -173,7 +173,7 @@ async function loadTable() {
                 </select>
             </td>
 
-            <td>${weighted.toFixed(2)}</td>
+            <td class="weighted">${weighted.toFixed(2)}</td>
             <td>
                 ${isLatest
                     ? `<input
