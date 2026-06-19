@@ -45,6 +45,18 @@ function formatDate(dateString) {
     return `${weekday}, ${rest}`;
 }
 
+async function getLatestShift() {
+    const q = query(
+        shiftsRef,
+        orderBy("checkIn", "desc"),
+        limit(1)
+    );
+
+    const snap = await getDocs(q);
+
+    return snap.empty ? null : snap.docs[0];
+}
+
 async function updateUIState() {
     const openShift = await getOpenShift();
 
@@ -64,6 +76,10 @@ document.getElementById("startBtn").onclick = async () => {
         return;
     }
 
+    const latestShift = await getLatestShift();
+
+    const monthId = latestShift?.data().monthId ?? 1;
+
     const now = new Date();
 
     await addDoc(shiftsRef, {
@@ -71,7 +87,7 @@ document.getElementById("startBtn").onclick = async () => {
         checkIn: Timestamp.fromDate(now),
         checkOut: null,
         payPercent: 100,
-        monthId: `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`,
+        monthId,
         hours: null
     });
 
@@ -114,7 +130,7 @@ async function loadTable() {
     const table = document.getElementById("tableBody");
     table.innerHTML = "";
 
-    snap.forEach(d => {
+    snap.docs.forEach((d, index) => {
 
         const data = d.data();
 
@@ -155,7 +171,16 @@ async function loadTable() {
             </td>
 
             <td>${weighted.toFixed(2)}</td>
-            <td>${data.monthId}</td>
+            <td>
+                ${index === 0
+                    ? `<input
+                        type="number"
+                        class="form-control form-control-sm month-id"
+                        data-id="${d.id}"
+                        value="${data.monthId ?? 1}"
+                    >`
+                : data.monthId}
+            </td>
             <td class="fw-bold text-success">€${earnings.toFixed(2)}</td>
         </tr>
         `;
@@ -181,6 +206,20 @@ document.getElementById("tableBody").addEventListener("change", async (event) =>
 
     await updateDoc(doc(db, "shifts", id), {
         payPercent
+    });
+
+    loadTable();
+});
+
+document.getElementById("tableBody").addEventListener("change", async (event) => {
+
+    if (!event.target.classList.contains("month-id")) return;
+
+    const id = event.target.dataset.id;
+    const monthId = Number(event.target.value);
+
+    await updateDoc(doc(db, "shifts", id), {
+        monthId
     });
 
     loadTable();
