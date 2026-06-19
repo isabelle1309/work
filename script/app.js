@@ -155,6 +155,9 @@ async function loadTable() {
 
         const formattedDate = formatDate(data.date);
 
+        const latestId = snap.docs[0]?.id;
+        const isLatest = d.id === latestId;
+
         const row = `
         <tr class="${isOpen ? "table-warning" : ""}">
             <td>${formattedDate}</td>
@@ -172,7 +175,7 @@ async function loadTable() {
 
             <td>${weighted.toFixed(2)}</td>
             <td>
-                ${index === 0
+                ${isLatest
                     ? `<input
                         type="number"
                         class="form-control form-control-sm month-id"
@@ -196,20 +199,6 @@ async function loadTable() {
 
     updateUIState();
 }
-
-document.getElementById("tableBody").addEventListener("change", async (event) => {
-
-    if (!event.target.classList.contains("pay-percent")) return;
-
-    const id = event.target.dataset.id;
-    const payPercent = Number(event.target.value);
-
-    await updateDoc(doc(db, "shifts", id), {
-        payPercent
-    });
-
-    loadTable();
-});
 
 document.getElementById("tableBody").addEventListener("change", async (event) => {
 
