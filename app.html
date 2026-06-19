@@ -4,21 +4,20 @@
     }
 
     @media (max-width: 500px) {
+        /* mobile */
         #startBtn{
             padding: 50px 0;
         }
         #endBtn{
             padding: 50px 0;
         }
-        .hours{
-            display: none;
-        }
-        .weighted{
+        .hours, .weighted, .month{
             display: none;
         }
     }
 
     @media (min-width: 501px) {
+        /* landscape */
         #startBtn{
             padding-bottom: 6.75px;
             padding-left: 13.5px;
@@ -31,10 +30,7 @@
             padding-right: 13.5px;
             padding-top: 6.75px
         }
-        .hours{
-            display: table-cell;
-        }
-        .weighted{
+        .hours, .weighted, .month{
             display: table-cell;
         }
     }
@@ -104,7 +100,7 @@
                     <th class="hours">Hrs</th>
                     <th>Pay</th>
                     <th class="weighted">W</th>
-                    <th>Month</th>
+                    <th class="month">Month</th>
                     <th>Eur</th>
                 </tr>
             </thead>

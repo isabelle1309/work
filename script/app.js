@@ -174,7 +174,7 @@ async function loadTable() {
             </td>
 
             <td class="weighted">${weighted.toFixed(2)}</td>
-            <td>
+            <td class="month">
                 ${isLatest
                     ? `<input
                         type="number"
