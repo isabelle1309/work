@@ -214,4 +214,18 @@ document.getElementById("tableBody").addEventListener("change", async (event) =>
     loadTable();
 });
 
+document.getElementById("tableBody").addEventListener("change", async (event) => {
+
+    if (!event.target.classList.contains("pay-percent")) return;
+
+    const id = event.target.dataset.id;
+    const payPercent = Number(event.target.value);
+
+    await updateDoc(doc(db, "shifts", id), {
+        payPercent
+    });
+
+    loadTable();
+});
+
 loadTable();
