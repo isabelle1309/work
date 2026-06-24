@@ -1,5 +1,5 @@
 import { db, auth } from "./firebase.js";
-import { collection, addDoc, getDocs, query, orderBy, updateDoc, doc, Timestamp, limit, onAuthStateChanged }
+import { collection, addDoc, getDocs, query, orderBy, updateDoc, doc, Timestamp, limit }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import {
     signInWithEmailAndPassword,
