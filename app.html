@@ -1,128 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="module">
+        import { auth } from "./script/firebase.js";
+        import { onAuthStateChanged }
+            from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = "../index.html";
+            }
+        });
+    </script>
+</head>
 <style>
     html {
         font-size: clamp(14px, 1.2vw, 18px);
     }
 
     @media (max-width: 500px) {
+
         /* mobile */
-        #startBtn{
+        #startBtn {
             padding: 50px 0;
         }
-        #endBtn{
+
+        #endBtn {
             padding: 50px 0;
         }
-        .hours, .weighted, .month{
+
+        .hours,
+        .weighted,
+        .month {
             display: none;
         }
     }
 
     @media (min-width: 501px) {
+
         /* landscape */
-        #startBtn{
+        #startBtn {
             padding-bottom: 6.75px;
             padding-left: 13.5px;
             padding-right: 13.5px;
             padding-top: 6.75px
         }
-        #endBtn{
+
+        #endBtn {
             padding-bottom: 6.75px;
             padding-left: 13.5px;
             padding-right: 13.5px;
             padding-top: 6.75px
         }
-        .hours, .weighted, .month{
+
+        .hours,
+        .weighted,
+        .month {
             display: table-cell;
         }
     }
-
-
 </style>
 
-<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+<body>
+    <div class="container py-3 py-md-4">
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+        <div
+            class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-2">
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+            <h1 class="mb-0 fs-3 fs-md-2">Shift dashboard</h1>
 
-<div class="container py-3 py-md-4">
+            <button id="logoutBtn" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </button>
 
-    <div
-        class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-2">
-
-        <h1 class="mb-0 fs-3 fs-md-2">Shift dashboard</h1>
-
-        <button id="logoutBtn" class="btn btn-outline-secondary btn-sm">
-            <i class="bi bi-box-arrow-right"></i> Logout
-        </button>
-
-    </div>
-
-    <div class="d-grid d-md-flex gap-2 mb-3">
-
-        <button id="startBtn" class="btn btn-success flex-fill flex-md-none">
-            <i class="bi bi-play-fill"></i> Start Shift
-        </button>
-
-        <button id="endBtn" class="btn btn-danger flex-fill flex-md-none">
-            <i class="bi bi-stop-fill"></i> End Shift
-        </button>
-
-    </div>
-
-    <div class="row g-2 mb-3">
-
-        <div class="col-6 col-md-6">
-            <div class="card p-2 p-md-3 shadow-sm text-center">
-                <small class="text-muted">Total Hours</small>
-                <h4 id="totalHours" class="mb-0">0</h4>
-            </div>
         </div>
 
-        <div class="col-6 col-md-6">
-            <div class="card p-2 p-md-3 shadow-sm text-center">
-                <small class="text-muted">Total Earnings</small>
-                <h4 class="mb-0">€<span id="totalEarnings">0</span></h4>
+        <div class="d-grid d-md-flex gap-2 mb-3">
+
+            <button id="startBtn" class="btn btn-success flex-fill flex-md-none">
+                <i class="bi bi-play-fill"></i> Start Shift
+            </button>
+
+            <button id="endBtn" class="btn btn-danger flex-fill flex-md-none">
+                <i class="bi bi-stop-fill"></i> End Shift
+            </button>
+
+        </div>
+
+        <div class="row g-2 mb-3">
+
+            <div class="col-6 col-md-6">
+                <div class="card p-2 p-md-3 shadow-sm text-center">
+                    <small class="text-muted">Total Hours</small>
+                    <h4 id="totalHours" class="mb-0">0</h4>
+                </div>
             </div>
+
+            <div class="col-6 col-md-6">
+                <div class="card p-2 p-md-3 shadow-sm text-center">
+                    <small class="text-muted">Total Earnings</small>
+                    <h4 class="mb-0">€<span id="totalEarnings">0</span></h4>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="table-responsive shadow-sm rounded">
+
+            <table class="table table-striped table-hover align-middle table-sm mb-0">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th class="text-nowrap">Date</th>
+                        <th class="text-nowrap">In</th>
+                        <th class="text-nowrap">Out</th>
+                        <th class="hours">Hrs</th>
+                        <th>Pay</th>
+                        <th class="weighted">W</th>
+                        <th class="month">Month</th>
+                        <th>Eur</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tableBody"></tbody>
+
+            </table>
+
         </div>
 
     </div>
-
-    <div class="table-responsive shadow-sm rounded">
-
-        <table class="table table-striped table-hover align-middle table-sm mb-0">
-
-            <thead class="table-dark">
-                <tr>
-                    <th class="text-nowrap">Date</th>
-                    <th class="text-nowrap">In</th>
-                    <th class="text-nowrap">Out</th>
-                    <th class="hours">Hrs</th>
-                    <th>Pay</th>
-                    <th class="weighted">W</th>
-                    <th class="month">Month</th>
-                    <th>Eur</th>
-                </tr>
-            </thead>
-
-            <tbody id="tableBody"></tbody>
-
-        </table>
-
-    </div>
-
-</div>
-
+</body>
 <script type="module">
     import { auth } from "./script/firebase.js";
     import { signOut, onAuthStateChanged }
         from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-    onAuthStateChanged(auth, (user) => {
-        if (!user) {
-            window.location.href = "/index.html";
-        }
-    });
 
     document.getElementById("logoutBtn").onclick = async () => {
         await signOut(auth);
@@ -131,3 +150,5 @@
 </script>
 
 <script type="module" src="./script/app.js"></script>
+
+</html>

@@ -1,8 +1,16 @@
 import { db, auth } from "./firebase.js";
-import { collection, addDoc, getDocs, query, orderBy, updateDoc, doc, Timestamp, limit }
+import { collection, addDoc, getDocs, query, orderBy, updateDoc, doc, Timestamp, limit, signOut, onAuthStateChanged }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const shiftsRef = collection(db, "shifts");
+
+function checkUser(){
+    onAuthStateChanged(auth, (user) => {
+        if (!user) {
+            window.location.href = "/index.html";;
+        }
+    });
+}
 
 async function getOpenShift() {
     const q = query(
@@ -66,6 +74,8 @@ async function updateUIState() {
 
 document.getElementById("startBtn").onclick = async () => {
 
+    checkUser();
+
     document.getElementById("startBtn").disabled = true;
 
     const openShift = await getOpenShift();
@@ -95,6 +105,9 @@ document.getElementById("startBtn").onclick = async () => {
 };
 
 document.getElementById("endBtn").onclick = async () => {
+
+    checkUser();
+
     const openShift = await getOpenShift();
 
     if (!openShift) {
@@ -120,6 +133,8 @@ document.getElementById("endBtn").onclick = async () => {
 };
 
 async function loadTable() {
+
+    checkUser();
 
     const q = query(shiftsRef, orderBy("checkIn", "desc"));
     const snap = await getDocs(q);
