@@ -186,6 +186,30 @@ async function loadMonths() {
     }
 }
 
+function getDaysUntilNext14th() {
+    const today = new Date();
+
+    let target = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        14
+    );
+
+    if (today.getDate() > 14) {
+        target = new Date(
+            today.getFullYear(),
+            today.getMonth() + 1,
+            14
+        );
+    }
+
+    const msPerDay = 1000 * 60 * 60 * 24;
+
+    return Math.ceil(
+        (target - today) / msPerDay
+    );
+}
+
 async function loadTable(selectedMonth = "all") {
 
     checkUser();
@@ -271,6 +295,9 @@ async function loadTable(selectedMonth = "all") {
 
     document.getElementById("totalEarnings").innerText =
         totalEarnings.toFixed(2);
+
+    document.getElementById("daysLeft").innerText =
+        getDaysUntilNext14th();
 
     updateUIState();
 }
