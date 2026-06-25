@@ -106,7 +106,10 @@ document.getElementById("startBtn").onclick = async () => {
         hours: null
     });
 
-    loadTable();
+    const selectedMonth =
+        document.getElementById("monthSel").value;
+
+    loadTable(selectedMonth);
 };
 
 document.getElementById("endBtn").onclick = async () => {
@@ -134,7 +137,10 @@ document.getElementById("endBtn").onclick = async () => {
         hours
     });
 
-    loadTable();
+    const selectedMonth =
+        document.getElementById("monthSel").value;
+
+    loadTable(selectedMonth);
 };
 
 /**
@@ -153,26 +159,17 @@ async function getMonths() {
 }
 
 /**
- * @param {*} month Month that will be used
- * @returns All shifts from a specific month
- */
-async function getMonthShifts(month) {
-    const snap = await getDocs(shiftsRef);
-
-    return snap.docs
-        .filter(doc => (doc.data().monthId ?? 1) === month)
-        .map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
-}
-
-/**
  * Insert months into select
  */
 async function loadMonths() {
     const selector = document.getElementById("monthSel");
     selector.innerHTML = "";
+
+    // All months option
+    const allOption = document.createElement("option");
+    allOption.value = "all";
+    allOption.textContent = "All Months";
+    selector.appendChild(allOption);
 
     const months = await getMonths();
 
@@ -184,16 +181,24 @@ async function loadMonths() {
 
         selector.appendChild(option);
     });
+
+    if (!selector.value) {
+        selector.value = "all";
+    }
 }
 
-async function loadTable() {
+async function loadTable(selectedMonth = "all") {
 
     checkUser();
 
-    await loadMonths();
-
     const q = query(shiftsRef, orderBy("checkIn", "desc"));
     const snap = await getDocs(q);
+
+    const docs = snap.docs.filter(d => {
+        if (selectedMonth === "all") return true;
+
+        return (d.data().monthId ?? 1) === Number(selectedMonth);
+    });
 
     let totalHours = 0;
     let totalEarnings = 0;
@@ -201,7 +206,9 @@ async function loadTable() {
     const table = document.getElementById("tableBody");
     table.innerHTML = "";
 
-    snap.docs.forEach((d, index) => {
+    const latestId = docs[0]?.id;
+
+    docs.forEach((d, index) => {
 
         const data = d.data();
 
@@ -225,8 +232,6 @@ async function loadTable() {
         totalEarnings += earnings;
 
         const formattedDate = formatDate(data.date);
-
-        const latestId = snap.docs[0]?.id;
         const isLatest = d.id === latestId;
 
         const row = `
@@ -282,7 +287,10 @@ document.getElementById("tableBody").addEventListener("change", async (event) =>
         monthId
     });
 
-    loadTable();
+    const selectedMonth =
+        document.getElementById("monthSel").value;
+
+    loadTable(selectedMonth);
 });
 
 document.getElementById("tableBody").addEventListener("change", async (event) => {
@@ -296,7 +304,15 @@ document.getElementById("tableBody").addEventListener("change", async (event) =>
         payPercent
     });
 
-    loadTable();
+    const selectedMonth =
+        document.getElementById("monthSel").value;
+
+    loadTable(selectedMonth);
 });
 
-loadTable();
+document.getElementById("monthSel").addEventListener("change", (event) => {
+    loadTable(event.target.value);
+});
+
+await loadMonths();
+await loadTable();
