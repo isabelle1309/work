@@ -181,9 +181,7 @@ async function loadMonths() {
         selector.appendChild(option);
     });
 
-    if (!selector.value) {
-        selector.value = "all";
-    }
+    selector.value = months.length > 0 ? months[0].toString() : "all";
 }
 
 function getDaysUntilNext14th() {
