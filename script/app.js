@@ -167,16 +167,23 @@ async function getMonthShifts(month) {
         }));
 }
 
+/**
+ * Insert months into select
+ */
 async function loadMonths() {
     const selector = document.getElementById("monthSel");
     selector.innerHTML = "";
-    const months = getMonths();
 
-    for (let index = 0; index < months.length; index++) {
-        let option = document.createElement("option");
-        option.value = `Month ${months[index]}`;
+    const months = await getMonths();
+
+    months.forEach(month => {
+        const option = document.createElement("option");
+
+        option.value = month;
+        option.textContent = `Month ${month}`;
+
         selector.appendChild(option);
-    }
+    });
 }
 
 async function loadTable() {
