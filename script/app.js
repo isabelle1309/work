@@ -165,13 +165,12 @@ async function loadMonths() {
     const selector = document.getElementById("monthSel");
     selector.innerHTML = "";
 
-    // All months option
     const allOption = document.createElement("option");
     allOption.value = "all";
     allOption.textContent = "All Months";
     selector.appendChild(allOption);
 
-    const months = await getMonths();
+    const months = (await getMonths()).reverse();
 
     months.forEach(month => {
         const option = document.createElement("option");
