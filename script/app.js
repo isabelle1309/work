@@ -9,7 +9,7 @@ import {
 
 const shiftsRef = collection(db, "shifts");
 
-function checkUser(){
+function checkUser() {
     onAuthStateChanged(auth, (user) => {
         if (!user) {
             window.location.href = "/index.html";;
@@ -137,9 +137,53 @@ document.getElementById("endBtn").onclick = async () => {
     loadTable();
 };
 
+/**
+ * @returns All month IDs (numbers)
+ */
+async function getMonths() {
+    const snap = await getDocs(shiftsRef);
+
+    const months = new Set();
+
+    snap.forEach((doc) => {
+        months.add(doc.data().monthId ?? 1);
+    });
+
+    return [...months].sort((a, b) => a - b);
+}
+
+/**
+ * @param {*} month Month that will be used
+ * @returns All shifts from a specific month
+ */
+async function getMonthShifts(month) {
+    const snap = await getDocs(shiftsRef);
+
+    return snap.docs
+        .filter(doc => (doc.data().monthId ?? 1) === month)
+        .map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+}
+
+async function loadMonths() {
+    const selector = document.getElementById("monthSel");
+    selector.innerHTML = "";
+    const months = getMonths();
+
+    for (let index = 0; index < months.length; index++) {
+        let option = document.createElement("option");
+        option.value = `Month ${months[index]}`;
+        selector.appendChild(option);
+    }
+}
+
 async function loadTable() {
 
     checkUser();
+
+    await loadMonths();
 
     const q = query(shiftsRef, orderBy("checkIn", "desc"));
     const snap = await getDocs(q);
@@ -196,7 +240,7 @@ async function loadTable() {
             <td class="weighted">${weighted.toFixed(2)}</td>
             <td class="month">
                 ${isLatest
-                    ? `<input
+                ? `<input
                         type="number"
                         class="form-control form-control-sm month-id"
                         data-id="${d.id}"
