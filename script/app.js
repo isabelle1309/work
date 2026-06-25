@@ -339,4 +339,6 @@ document.getElementById("monthSel").addEventListener("change", (event) => {
 });
 
 await loadMonths();
-await loadTable();
+
+const selectedMonth = document.getElementById("monthSel").value;
+await loadTable(selectedMonth);
