@@ -309,8 +309,8 @@ document.getElementById("tableBody").addEventListener("change", async (event) =>
     await updateDoc(doc(db, "shifts", id), {
         monthId
     });
-    loadMonths();
-    loadTableWMonth();
+    await loadMonths();
+    await loadTableWMonth();
 });
 
 document.getElementById("tableBody").addEventListener("change", async (event) => {
