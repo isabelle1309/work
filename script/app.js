@@ -106,10 +106,7 @@ document.getElementById("startBtn").onclick = async () => {
         hours: null
     });
 
-    const selectedMonth =
-        document.getElementById("monthSel").value;
-
-    loadTable(selectedMonth);
+    loadTableWMonth();
 };
 
 document.getElementById("endBtn").onclick = async () => {
@@ -137,10 +134,7 @@ document.getElementById("endBtn").onclick = async () => {
         hours
     });
 
-    const selectedMonth =
-        document.getElementById("monthSel").value;
-
-    loadTable(selectedMonth);
+    loadTableWMonth();
 };
 
 /**
@@ -206,6 +200,11 @@ function getDaysUntilNext14th() {
     return Math.ceil(
         (target - today) / msPerDay
     );
+}
+
+function loadTableWMonth(){
+    const selectedMonth = document.getElementById("monthSel").value;
+    loadTable(selectedMonth);
 }
 
 async function loadTable(selectedMonth = "all") {
@@ -310,11 +309,8 @@ document.getElementById("tableBody").addEventListener("change", async (event) =>
     await updateDoc(doc(db, "shifts", id), {
         monthId
     });
-
-    const selectedMonth =
-        document.getElementById("monthSel").value;
-
-    loadTable(selectedMonth);
+    loadMonths();
+    loadTableWMonth();
 });
 
 document.getElementById("tableBody").addEventListener("change", async (event) => {
@@ -328,10 +324,7 @@ document.getElementById("tableBody").addEventListener("change", async (event) =>
         payPercent
     });
 
-    const selectedMonth =
-        document.getElementById("monthSel").value;
-
-    loadTable(selectedMonth);
+    loadTableWMonth();
 });
 
 document.getElementById("monthSel").addEventListener("change", (event) => {
