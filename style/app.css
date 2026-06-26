@@ -1,7 +1,3 @@
-html {
-    font-size: clamp(14px, 1.2vw, 18px);
-}
-
 @media (max-width: 500px) {
 
     /* mobile */
@@ -42,4 +38,28 @@ html {
     .month {
         display: table-cell;
     }
+}
+
+.custom-navbar {
+    background-color: #F5A9B8;
+}
+
+.navbar-brand {
+    color: white !important;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background-color: #F5A9B8;
+    border-color: #FAD4DC;
+}
+
+.btn-primary:hover {
+    background-color: #e98ea3;
+    border-color: #e98ea3;
+}
+
+.landing-icon {
+    font-size: 4rem;
+    color: #5BCEFA;
 }

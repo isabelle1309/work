@@ -1,0 +1,42 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.landing-card {
+    transition: all .2s ease-in-out;
+    cursor: pointer;
+}
+
+.landing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, .15);
+}
+
+.custom-navbar {
+    background-color: #F5A9B8;
+}
+
+.navbar-brand {
+    color: white !important;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background-color: #F5A9B8;
+    border-color: #F5A9B8;
+}
+
+.btn-primary:hover {
+    background-color: #e98ea3;
+    border-color: #e98ea3;
+}
+
+.landing-icon {
+    font-size: 4rem;
+    color: #5BCEFA;
+}
+
+#time{
+    font-family: rockwell;
+    font-weight: bold;
+}
