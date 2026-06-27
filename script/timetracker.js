@@ -1,6 +1,17 @@
 import { db, auth } from "./firebase.js";
-import { collection, addDoc, getDocs, query, orderBy, updateDoc, doc, Timestamp, limit }
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import {
+    collection,
+    addDoc,
+    getDocs,
+    getDoc,
+    setDoc,
+    query,
+    orderBy,
+    updateDoc,
+    doc,
+    Timestamp,
+    limit
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import {
     signInWithEmailAndPassword,
     signOut,
@@ -9,12 +20,33 @@ import {
 
 const shiftsRef = collection(db, "shifts");
 
-function checkUser() {
-    onAuthStateChanged(auth, (user) => {
-        if (!user) {
-            window.location.href = "/index.html";;
-        }
-    });
+document.body.style.display = "none";
+
+onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+        window.location.href = "/index.html";
+        return;
+    }
+
+    const ref = doc(db, "users", user.uid);
+    const snap = await getDoc(ref);
+
+    const role = snap.data()?.role;
+
+    if (role !== "admin") {
+        window.location.href = "landingpage.html";
+        return;
+    }
+
+    document.body.style.display = "block";
+    initTimeTracker();
+});
+
+function initTimeTracker() {
+    loadTableWMonth();
+    updateUIState();
+    loadMonths();
+    document.body.style.display = "block";
 }
 
 async function getOpenShift() {
@@ -79,8 +111,6 @@ async function updateUIState() {
 
 document.getElementById("startBtn").onclick = async () => {
 
-    checkUser();
-
     document.getElementById("startBtn").disabled = true;
 
     const openShift = await getOpenShift();
@@ -93,7 +123,7 @@ document.getElementById("startBtn").onclick = async () => {
 
     const latestShift = await getLatestShift();
 
-    const monthId = latestShift?.data().monthId ?? 1;
+    const monthId = latestShift?.data()?.monthId ?? 1;
 
     const now = new Date();
 
@@ -110,8 +140,6 @@ document.getElementById("startBtn").onclick = async () => {
 };
 
 document.getElementById("endBtn").onclick = async () => {
-
-    checkUser();
 
     const openShift = await getOpenShift();
 
@@ -137,9 +165,6 @@ document.getElementById("endBtn").onclick = async () => {
     loadTableWMonth();
 };
 
-/**
- * @returns All month IDs (numbers)
- */
 async function getMonths() {
     const snap = await getDocs(shiftsRef);
 
@@ -152,9 +177,6 @@ async function getMonths() {
     return [...months].sort((a, b) => a - b);
 }
 
-/**
- * Insert months into select
- */
 async function loadMonths() {
     const selector = document.getElementById("monthSel");
     selector.innerHTML = "";
@@ -202,14 +224,12 @@ function getDaysUntilNext14th() {
     );
 }
 
-function loadTableWMonth(){
+function loadTableWMonth() {
     const selectedMonth = document.getElementById("monthSel").value;
     loadTable(selectedMonth);
 }
 
 async function loadTable(selectedMonth = "all") {
-
-    checkUser();
 
     const q = query(shiftsRef, orderBy("checkIn", "desc"));
     const snap = await getDocs(q);
