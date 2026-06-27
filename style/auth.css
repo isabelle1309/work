@@ -1,9 +1,9 @@
 .btn-primary, .btn-disabled, .btn:disabled {
-    background-color: #F5A9B8;
-    border-color: #FAD4DC;
+    background-color: #F490A4;
+    border-color: #F9BBC8;
 }
 
 .btn-primary:hover {
-    background-color: #e98ea3;
-    border-color: #e98ea3;
+    background-color: #F2A9B8;
+    border-color: #F7D4DC;
 }
