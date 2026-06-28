@@ -41,12 +41,7 @@
 }
 
 .custom-navbar {
-    background-color: #F5A9B8;
-}
-
-.navbar-brand {
-    color: white !important;
-    font-weight: 600;
+    background-color: #f5a9b880;
 }
 
 .btn-primary {

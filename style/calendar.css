@@ -1,9 +1,5 @@
-body {
-    background: #f5f7fb;
-}
-
 .custom-navbar {
-    background-color: #F5A9B8;
+    background-color: #f5a9b880;
 }
 
 .btn-primary {
@@ -14,11 +10,6 @@ body {
 .btn-primary:hover {
     background-color: #e98ea3;
     border-color: #e98ea3;
-}
-
-.landing-icon {
-    font-size: 4rem;
-    color: #5BCEFA;
 }
 
 #weekTitle {
@@ -33,25 +24,14 @@ button {
     display: grid;
     grid-template-columns: 80px repeat(7, 1fr);
     border: 1px solid #dee2e6;
-    background: white;
 }
 
 #calendarGrid > div {
     box-sizing: border-box;
 }
 
-.header {
-    background: #5BCEFA;
-    color: white;
-    text-align: center;
-    font-weight: 600;
-    padding: 10px 5px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
 .timeColumn {
     position: relative;
-    background: #f8f9fa;
     border-right: 1px solid #dee2e6;
 }
 
@@ -172,8 +152,8 @@ button {
 }
 
 #prevWeek, #nextWeek{
-    background: #5BCEFA;
-        border-color: #9de1fc;
+    background: #5BCEFA80;
+    border-color: #9de1fc10;
 }
 
 .today-column {

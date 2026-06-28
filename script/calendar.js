@@ -136,7 +136,6 @@ function renderWeekHeader(weekDays) {
     header.style.display = "grid";
     header.style.gridTemplateColumns = "80px repeat(7, 1fr)";
     header.style.border = "1px solid #dee2e6";
-    header.style.background = "white";
 
     const empty = document.createElement("div");
     header.appendChild(empty);
@@ -209,7 +208,9 @@ function renderCalendar(weekStart) {
             label.innerText =
                 `${String(hour).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 
-            timeCol.appendChild(label);
+            if (label.innerText != "06:00" && label.innerText != "22:00"){
+                timeCol.appendChild(label);
+            }
         }
     }
 
@@ -329,7 +330,7 @@ function renderEventsForDay(col, day) {
             event.style.left = "4px";
             event.style.right = "4px";
 
-            event.style.background = appt.color || "#ff006e";
+            event.style.background = appt.color || "#7a0035";
 
             event.onclick = (e) => {
                 e.stopPropagation();
@@ -351,7 +352,7 @@ function openNewAppointment(date) {
 
     document.getElementById("appointmentTitle").value = "";
     document.getElementById("appointmentDescription").value = "";
-    document.getElementById("appointmentColor").value = "#ff006e";
+    document.getElementById("appointmentColor").value = "#7a0035";
 
     document.getElementById("appointmentStart").value = toLocalInput(date);
     document.getElementById("appointmentEnd").value = toLocalInput(
@@ -367,7 +368,7 @@ function openEditAppointment(appt) {
 
     document.getElementById("appointmentTitle").value = appt.title;
     document.getElementById("appointmentDescription").value = appt.description || "";
-    document.getElementById("appointmentColor").value = appt.color || "#ff006e";
+    document.getElementById("appointmentColor").value = appt.color || "#7a0035";
 
     document.getElementById("appointmentStart").value =
         toLocalInput(appt.start.toDate());
