@@ -87,6 +87,27 @@ async function loadWeek() {
     renderCalendar(start);
 }
 
+function renderCurrentTimeLine(col, day) {
+
+    const now = new Date();
+
+    if (day.toDateString() !== now.toDateString()) return;
+
+    const minutes =
+        (now.getHours() - START_HOUR) * 60 +
+        now.getMinutes();
+
+    if (minutes < 0 || minutes > (END_HOUR - START_HOUR) * 60)
+        return;
+
+    const line = document.createElement("div");
+    line.className = "current-time-line";
+
+    line.style.top = minutes + "px";
+
+    col.appendChild(line);
+}
+
 async function loadAppointments(uid) {
 
     appointments = [];
@@ -254,6 +275,8 @@ function renderCalendar(weekStart) {
 
         renderEventsForDay(col, day);
 
+        renderCurrentTimeLine(col, day);
+
         container.appendChild(col);
 
         renderWeekHeader(weekDays);
@@ -420,3 +443,5 @@ function toLocalInput(date) {
 function pad(n) {
     return n.toString().padStart(2, "0");
 }
+
+setInterval(loadWeek, 30000);
