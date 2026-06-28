@@ -34,7 +34,7 @@ onAuthStateChanged(auth, async (user) => {
     const role = snap.data()?.role;
 
     if (role !== "admin") {
-        window.location.href = "landingpage.html";
+        window.location.href = "homepage.html";
         return;
     }
 
