@@ -208,7 +208,7 @@ function renderCalendar(weekStart) {
             label.innerText =
                 `${String(hour).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 
-            if (label.innerText != "06:00" && label.innerText != "22:00"){
+            if (label.innerText != "06:00" && label.innerText != "22:00") {
                 timeCol.appendChild(label);
             }
         }
@@ -292,53 +292,108 @@ function renderEventsForDay(col, day) {
     const dayEnd = new Date(day);
     dayEnd.setHours(23, 59, 59, 999);
 
-    appointments.forEach(appt => {
+    const dayAppointments = appointments
+        .filter(appt => {
+            const start = appt.start.toDate();
+            const end = appt.end.toDate();
+
+            return start < dayEnd && end > dayStart;
+        })
+        .sort((a, b) => a.start.toDate() - b.start.toDate());
+
+    const layout = [];
+
+    for (const appt of dayAppointments) {
 
         const start = appt.start.toDate();
         const end = appt.end.toDate();
 
-        if (start >= dayStart && start <= dayEnd) {
+        let placed = false;
 
-            const event = document.createElement("div");
-            event.className = "event";
+        for (let column = 0; !placed; column++) {
 
-            const pad = n => n.toString().padStart(2, "0");
+            const collision = layout.some(item =>
+                item.column === column &&
+                start < item.end &&
+                end > item.start
+            );
 
-            const timeRange =
-                `${pad(start.getHours())}:${pad(start.getMinutes())} - ` +
-                `${pad(end.getHours())}:${pad(end.getMinutes())}`;
+            if (!collision) {
 
-            event.innerHTML = `
-                <div class="event-title">${appt.title}</div>
-                <div class="event-time">${timeRange}</div>
-                ${appt.description
-                    ? `<div class="event-desc">${appt.description}</div>`
-                    : ""
-                }
-            `;
+                layout.push({
+                    appt,
+                    start,
+                    end,
+                    column
+                });
 
-            const startMinutes = (start.getHours() * 60) + start.getMinutes();
-            const endMinutes = (end.getHours() * 60) + end.getMinutes();
-
-            const top = startMinutes - (START_HOUR * 60);
-            const height = Math.max(endMinutes - startMinutes, 10);
-
-            event.style.position = "absolute";
-            event.style.top = Math.floor(top / 10) * 10 + "px";
-            event.style.height = Math.floor(height / 10) * 10 + "px";
-
-            event.style.left = "4px";
-            event.style.right = "4px";
-
-            event.style.background = appt.color || "#7a0035";
-
-            event.onclick = (e) => {
-                e.stopPropagation();
-                openEditAppointment(appt);
-            };
-
-            col.appendChild(event);
+                placed = true;
+            }
         }
+    }
+
+    layout.forEach(item => {
+
+        const overlapping = layout.filter(other =>
+            item.start < other.end &&
+            item.end > other.start
+        );
+
+        item.columns = Math.max(
+            ...overlapping.map(o => o.column)
+        ) + 1;
+
+    });
+
+    layout.forEach(item => {
+
+        const { appt, start, end } = item;
+
+        const event = document.createElement("div");
+        event.className = "event";
+
+        const pad = n => n.toString().padStart(2, "0");
+
+        const timeRange =
+            `${pad(start.getHours())}:${pad(start.getMinutes())} - ` +
+            `${pad(end.getHours())}:${pad(end.getMinutes())}`;
+
+        event.innerHTML = `
+            <div class="event-title">${appt.title}</div>
+            <div class="event-time">${timeRange}</div>
+            ${appt.description
+                ? `<div class="event-desc">${appt.description}</div>`
+                : ""}
+        `;
+
+        const startMinutes =
+            start.getHours() * 60 + start.getMinutes();
+
+        const endMinutes =
+            end.getHours() * 60 + end.getMinutes();
+
+        const top = startMinutes - START_HOUR * 60;
+        const height = Math.max(endMinutes - startMinutes, 10);
+
+        event.style.position = "absolute";
+        event.style.top = Math.floor(top / 10) * 10 + "px";
+        event.style.height = Math.floor(height / 10) * 10 + "px";
+
+        const gap = 2;
+        const width = 100 / item.columns;
+
+        event.style.left = `calc(${width * item.column}% + ${gap}px)`;
+        event.style.width = `calc(${width}% - ${gap * 2}px)`;
+
+        event.style.background = appt.color || "#7a0035";
+
+        event.onclick = (e) => {
+            e.stopPropagation();
+            openEditAppointment(appt);
+        };
+
+        col.appendChild(event);
+
     });
 }
 

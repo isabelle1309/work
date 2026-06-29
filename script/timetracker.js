@@ -19,6 +19,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const shiftsRef = collection(db, "shifts");
+let userRole = "";
 
 document.body.style.display = "none";
 
@@ -33,9 +34,11 @@ onAuthStateChanged(auth, async (user) => {
 
     const role = snap.data()?.role;
 
-    if (role !== "admin") {
-        window.location.href = "homepage.html";
-        return;
+    userRole = role;
+
+    if (userRole !== "admin") {
+        document.getElementById("startBtn").disabled = true;
+        document.getElementById("endBtn").disabled = true;
     }
 
     document.body.style.display = "block";
@@ -105,8 +108,14 @@ async function getLatestShift() {
 async function updateUIState() {
     const openShift = await getOpenShift();
 
-    document.getElementById("startBtn").disabled = !!openShift;
-    document.getElementById("endBtn").disabled = !openShift;
+    if (userRole !== "admin") {
+        document.getElementById("startBtn").disabled = true;
+        document.getElementById("endBtn").disabled = true;
+    }
+    else {
+        document.getElementById("startBtn").disabled = !!openShift;
+        document.getElementById("endBtn").disabled = !openShift;
+    }
 }
 
 document.getElementById("startBtn").onclick = async () => {
@@ -296,7 +305,8 @@ async function loadTable(selectedMonth = "all") {
                         type="number"
                         class="form-control form-control-sm month-id"
                         data-id="${d.id}"
-                        value="${data.monthId ?? 1}"
+                        value="${data.monthId ?? 1}" 
+                        ${userRole !== "admin" ? "disabled" : ""}
                     >`
                 : data.monthId}
             </td>

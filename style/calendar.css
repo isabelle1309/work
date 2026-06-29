@@ -1,5 +1,5 @@
 .custom-navbar {
-    background-color: #f5a9b880;
+    background-color: #8B6770;
 }
 
 .btn-primary {
@@ -26,7 +26,7 @@ button {
     border: 1px solid #dee2e6;
 }
 
-#calendarGrid > div {
+#calendarGrid>div {
     box-sizing: border-box;
 }
 
@@ -46,26 +46,23 @@ button {
 
 .dayColumn {
     position: relative;
-    height: 960px; /* 16 hours * 60px */
+    height: 960px;
     cursor: pointer;
+    overflow: hidden;
 
     border: 1px solid #e6e9ef;
 
     background-image:
-        repeating-linear-gradient(
-            to bottom,
+        repeating-linear-gradient(to bottom,
             rgba(0, 0, 0, 0.08) 0px,
             rgba(0, 0, 0, 0.08) 1px,
             transparent 1px,
-            transparent 60px
-        ),
-        repeating-linear-gradient(
-            to bottom,
+            transparent 60px),
+        repeating-linear-gradient(to bottom,
             rgba(0, 0, 0, 0.04) 0px,
             rgba(0, 0, 0, 0.04) 1px,
             transparent 1px,
-            transparent 10px
-        );
+            transparent 10px);
 }
 
 .dayColumn:hover {
@@ -92,7 +89,8 @@ button {
     flex-direction: column;
     gap: 2px;
 
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    box-sizing: border-box;
 
     cursor: pointer;
 }
@@ -138,7 +136,7 @@ button {
     position: fixed;
     pointer-events: none;
 
-    background: rgba(0,0,0,0.75);
+    background: rgba(0, 0, 0, 0.75);
     color: white;
 
     padding: 4px 8px;
@@ -151,7 +149,8 @@ button {
     z-index: 9999;
 }
 
-#prevWeek, #nextWeek{
+#prevWeek,
+#nextWeek {
     background: #5BCEFA80;
     border-color: #9de1fc10;
 }
@@ -179,4 +178,17 @@ button {
     height: 10px;
     background: #e53935;
     border-radius: 50%;
+}
+
+#calendarHeader {
+    position: sticky;
+    top: 56px;
+    z-index: 100;
+    background: var(--bs-body-bg);
+}
+
+.custom-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 101;
 }
