@@ -21,8 +21,6 @@ import {
 const shiftsRef = collection(db, "shifts");
 let userRole = "";
 
-document.body.style.display = "none";
-
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
         window.location.href = "/index.html";
@@ -40,8 +38,6 @@ onAuthStateChanged(auth, async (user) => {
         document.getElementById("startBtn").disabled = true;
         document.getElementById("endBtn").disabled = true;
     }
-
-    document.body.style.display = "block";
     initTimeTracker();
 });
 
@@ -49,7 +45,6 @@ function initTimeTracker() {
     loadTableWMonth();
     updateUIState();
     loadMonths();
-    document.body.style.display = "block";
 }
 
 async function getOpenShift() {
