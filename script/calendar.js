@@ -431,6 +431,15 @@ function openEditAppointment(appt) {
     document.getElementById("appointmentEnd").value =
         toLocalInput(appt.end.toDate());
 
+    if (!isAdmin){
+        document.getElementById("appointmentTitle").disabled = true;
+        document.getElementById("appointmentDescription").disabled = true;
+        document.getElementById("appointmentStart").disabled = true;
+        document.getElementById("appointmentEnd").disabled = true;
+        document.getElementById("appointmentColor").disabled = true;
+        document.querySelector(".btn-secondary").innerText = "Octis";
+    }
+
     modal.show();
 }
 
