@@ -23,6 +23,7 @@ const HOUR_HEIGHT = 60;
 let currentMonday = getMonday(new Date());
 let appointments = [];
 let selectedAppointmentId = null;
+let currentTagFilter = "";
 
 async function ensureUserDoc(user) {
 
@@ -294,6 +295,20 @@ function renderEventsForDay(col, day) {
 
     const dayAppointments = appointments
         .filter(appt => {
+
+            // Tag filter
+            if (currentTagFilter) {
+                const tags = appt.tags || [];
+
+                const matches = tags.some(tag =>
+                    tag.toLowerCase().includes(currentTagFilter)
+                );
+
+                if (!matches)
+                    return false;
+            }
+
+            // Day filter
             const start = appt.start.toDate();
             const end = appt.end.toDate();
 
@@ -339,10 +354,8 @@ function renderEventsForDay(col, day) {
             item.end > other.start
         );
 
-        item.columns = Math.max(
-            ...overlapping.map(o => o.column)
-        ) + 1;
-
+        item.columns =
+            Math.max(...overlapping.map(o => o.column)) + 1;
     });
 
     layout.forEach(item => {
@@ -358,11 +371,20 @@ function renderEventsForDay(col, day) {
             `${pad(start.getHours())}:${pad(start.getMinutes())} - ` +
             `${pad(end.getHours())}:${pad(end.getMinutes())}`;
 
+        const tagsHtml = (appt.tags || [])
+            .map(tag => `<span class="event-tag">${tag}</span>`)
+            .join("");
+
         event.innerHTML = `
             <div class="event-title">${appt.title}</div>
             <div class="event-time">${timeRange}</div>
+
             ${appt.description
                 ? `<div class="event-desc">${appt.description}</div>`
+                : ""}
+
+            ${tagsHtml
+                ? `<div class="event-tags">${tagsHtml}</div>`
                 : ""}
         `;
 
@@ -393,7 +415,6 @@ function renderEventsForDay(col, day) {
         };
 
         col.appendChild(event);
-
     });
 }
 
@@ -407,6 +428,7 @@ function openNewAppointment(date) {
 
     document.getElementById("appointmentTitle").value = "";
     document.getElementById("appointmentDescription").value = "";
+    document.getElementById("appointmentTags").value = "";
     document.getElementById("appointmentColor").value = "#7a0035";
 
     document.getElementById("appointmentStart").value = toLocalInput(date);
@@ -423,6 +445,8 @@ function openEditAppointment(appt) {
 
     document.getElementById("appointmentTitle").value = appt.title;
     document.getElementById("appointmentDescription").value = appt.description || "";
+    document.getElementById("appointmentTags").value =
+        (appt.tags || []).join(", ");
     document.getElementById("appointmentColor").value = appt.color || "#7a0035";
 
     document.getElementById("appointmentStart").value =
@@ -431,9 +455,10 @@ function openEditAppointment(appt) {
     document.getElementById("appointmentEnd").value =
         toLocalInput(appt.end.toDate());
 
-    if (!isAdmin){
+    if (!isAdmin) {
         document.getElementById("appointmentTitle").disabled = true;
         document.getElementById("appointmentDescription").disabled = true;
+        document.getElementById("appointmentTags").disabled = true;
         document.getElementById("appointmentStart").disabled = true;
         document.getElementById("appointmentEnd").disabled = true;
         document.getElementById("appointmentColor").disabled = true;
@@ -448,11 +473,18 @@ document.getElementById("saveAppointment").onclick = async () => {
     const user = auth.currentUser;
     if (!user) return;
 
+    const tags = document.getElementById("appointmentTags")
+        .value
+        .split(",")
+        .map(t => t.trim().toLowerCase())
+        .filter(t => t.length > 0);
+
     const data = {
         uid: user.uid,
         title: document.getElementById("appointmentTitle").value,
         description: document.getElementById("appointmentDescription").value,
         color: document.getElementById("appointmentColor").value,
+        tags: tags,
         start: Timestamp.fromDate(
             new Date(document.getElementById("appointmentStart").value)
         ),
@@ -480,6 +512,11 @@ document.getElementById("deleteAppointment").onclick = async () => {
     modal.hide();
     loadWeek();
 };
+
+document.getElementById("tagSearch").addEventListener("input", (e) => {
+    currentTagFilter = e.target.value.trim().toLowerCase();
+    renderCalendar(currentMonday);
+});
 
 function getMonday(date) {
     const d = new Date(date);

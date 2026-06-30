@@ -79,7 +79,14 @@
                     Previous Week
                 </button>
 
-                <h3 id="weekTitle" class="text-center m-0"></h3>
+                <div>
+                    <div>
+                        <div class="col-md-0">
+                            <input id="tagSearch" class="form-control text-center" placeholder="Search tag...">
+                        </div>
+                    </div>
+                    <h3 id="weekTitle" class="text-center m-0"></h3>
+                </div>
 
                 <button class="btn btn-primary" id="nextWeek">
                     Next Week
@@ -116,9 +123,15 @@
 
                     <input id="appointmentTitle" class="form-control mb-3" placeholder="Title">
 
-                    <textarea id="appointmentDescription" class="form-control mb-3" rows="4"
-                        placeholder="Description"></textarea>
+                    <textarea id="appointmentDescription" class="form-control mb-3" rows="4" placeholder="Description">
+                    </textarea>
 
+
+                    <label class="form-label">
+                        Tags
+                    </label>
+
+                    <input id="appointmentTags" class="form-control mb-3">
                     <label class="form-label">
                         Start
                     </label>
