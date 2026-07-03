@@ -279,7 +279,7 @@ async function loadTable(selectedMonth = "all") {
         const isLatest = d.id === latestId;
 
         const row = `
-        <tr class="${isOpen ? "table-warning" : ""}">
+        <tr class="${isOpen ? "table-open" : ""}">
             <td>${formattedDate}</td>
             <td>${inTime ? formatTime(inTime) : "-"}</td>
             <td>${outTime ? formatTime(outTime) : "-"}</td>
