@@ -60,8 +60,8 @@
 }
 
 .table-open {
-    --bs-table-bg: #867281;
-    --bs-table-striped-bg: #8B6781;
+    --bs-table-bg: #968291;
+    --bs-table-striped-bg: #968291;
     --bs-table-hover-bg: #E2CCDB;
     --bs-table-color: inherit;
 }

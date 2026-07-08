@@ -20,6 +20,7 @@ import {
 
 const shiftsRef = collection(db, "shifts");
 let userRole = "";
+let liveUpdateInterval = null;
 
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -45,6 +46,7 @@ function initTimeTracker() {
     loadTableWMonth();
     updateUIState();
     loadMonths();
+    startLiveUpdate();
 }
 
 async function getOpenShift() {
@@ -204,6 +206,23 @@ async function loadMonths() {
     selector.value = months.length > 0 ? months[0].toString() : "all";
 }
 
+function startLiveUpdate() {
+
+    if (liveUpdateInterval) {
+        clearInterval(liveUpdateInterval);
+    }
+
+    liveUpdateInterval = setInterval(async () => {
+
+        const openShift = await getOpenShift();
+
+        if (openShift) {
+            loadTableWMonth();
+        }
+
+    }, 1000);
+}
+
 function getDaysUntilNext14th() {
     const today = new Date();
 
@@ -257,12 +276,16 @@ async function loadTable(selectedMonth = "all") {
         const data = d.data();
 
         const inTime = data.checkIn ? data.checkIn.toDate() : null;
-        const outTime = data.checkOut ? data.checkOut.toDate() : null;
 
-        const isOpen = !outTime;
+        const isOpen = !data.checkOut;
+
+        const outTime = data.checkOut
+            ? data.checkOut.toDate()
+            : new Date();
 
         let hours = 0;
-        if (inTime && outTime) {
+
+        if (inTime) {
             hours = (outTime - inTime) / 1000 / 60 / 60;
         }
 
@@ -282,7 +305,7 @@ async function loadTable(selectedMonth = "all") {
         <tr class="${isOpen ? "table-open" : ""}">
             <td>${formattedDate}</td>
             <td>${inTime ? formatTime(inTime) : "-"}</td>
-            <td>${outTime ? formatTime(outTime) : "-"}</td>
+            <td>${data.checkOut ? formatTime(outTime) : "Running..."}</td>
             <td class="hours">${hours.toFixed(2)}</td>
 
             <td>
