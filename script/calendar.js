@@ -59,6 +59,9 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById("deleteAppointment").style.display =
         isAdmin ? "block" : "none";
 
+    document.getElementById("copyAppointment").style.display =
+        isAdmin ? "block" : "none";
+
     await loadWeek();
 });
 
@@ -453,43 +456,43 @@ function renderEventsForDay(col, day) {
 
 function renderTagSuggestions() {
 
-        const container =
-            document.getElementById("tagSuggestions");
+    const container =
+        document.getElementById("tagSuggestions");
 
-        container.innerHTML = "";
+    container.innerHTML = "";
 
-        getAllTags().forEach(tag => {
+    getAllTags().forEach(tag => {
 
-            const badge = document.createElement("span");
+        const badge = document.createElement("span");
 
-            badge.className =
-                "badge bg-secondary me-1 mb-1";
+        badge.className =
+            "badge bg-secondary me-1 mb-1";
 
-            badge.style.cursor = "pointer";
+        badge.style.cursor = "pointer";
 
-            badge.innerText = tag;
+        badge.innerText = tag;
 
-            badge.onclick = () => {
+        badge.onclick = () => {
 
-                const input =
-                    document.getElementById("appointmentTags");
+            const input =
+                document.getElementById("appointmentTags");
 
-                const current = input.value
-                    .split(",")
-                    .map(t => t.trim())
-                    .filter(Boolean);
+            const current = input.value
+                .split(",")
+                .map(t => t.trim())
+                .filter(Boolean);
 
-                if (!current.includes(tag)) {
+            if (!current.includes(tag)) {
 
-                    current.push(tag);
+                current.push(tag);
 
-                    input.value = current.join(", ");
-                }
-            };
+                input.value = current.join(", ");
+            }
+        };
 
-            container.appendChild(badge);
-        });
-    }
+        container.appendChild(badge);
+    });
+}
 
 const modal = new bootstrap.Modal(
     document.getElementById("appointmentModal")
@@ -552,6 +555,8 @@ function openEditAppointment(appt) {
     document.getElementById("appointmentEnd").value =
         toLocalInput(appt.end.toDate());
 
+    renderTagSuggestions();
+
     if (!isAdmin) {
         document.getElementById("appointmentTitle").disabled = true;
         document.getElementById("appointmentDescription").disabled = true;
@@ -560,9 +565,14 @@ function openEditAppointment(appt) {
         document.getElementById("appointmentEnd").disabled = true;
         document.getElementById("appointmentColor").disabled = true;
         document.querySelector(".btn-secondary").innerText = "Octis";
-    }
+        const badge = document.querySelectorAll("#tagSuggestions span.badge");
+        for (let index = 0; index < badge.length; index++) {
+            const element = badge[index];
+            element.style.pointerEvents = "none";
+            element.style.opacity = "0.25";
+        }
 
-    renderTagSuggestions();
+    }
 
     modal.show();
 }
