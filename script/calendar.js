@@ -24,6 +24,7 @@ let currentMonday = getMonday(new Date());
 let appointments = [];
 let selectedAppointmentId = null;
 let currentTagFilter = "";
+let copiedAppointment = null;
 
 async function ensureUserDoc(user) {
 
@@ -84,6 +85,8 @@ async function loadWeek() {
         `${formatDate(start)} - ${formatDate(end)}`;
 
     await loadAppointments(user.uid);
+
+    updateTagSearchSuggestions();
 
     renderCalendar(start);
 }
@@ -246,7 +249,37 @@ function renderCalendar(weekStart) {
             date.setHours(START_HOUR, 0, 0, 0);
             date.setMinutes(date.getMinutes() + minutesFromTop);
 
-            openNewAppointment(date);
+            if (copiedAppointment) {
+
+                document.getElementById("appointmentTitle").value =
+                    copiedAppointment.title;
+
+                document.getElementById("appointmentDescription").value =
+                    copiedAppointment.description;
+
+                document.getElementById("appointmentTags").value =
+                    copiedAppointment.tags.join(", ");
+
+                document.getElementById("appointmentColor").value =
+                    copiedAppointment.color;
+
+                document.getElementById("appointmentStart").value =
+                    toLocalInput(date);
+
+                document.getElementById("appointmentEnd").value =
+                    toLocalInput(
+                        new Date(date.getTime() + copiedAppointment.duration)
+                    );
+
+                selectedAppointmentId = null;
+
+                copiedAppointment = null;
+
+                modal.show();
+
+            } else {
+                openNewAppointment(date);
+            }
         };
 
         col.addEventListener("mousemove", (e) => {
@@ -418,6 +451,46 @@ function renderEventsForDay(col, day) {
     });
 }
 
+function renderTagSuggestions() {
+
+        const container =
+            document.getElementById("tagSuggestions");
+
+        container.innerHTML = "";
+
+        getAllTags().forEach(tag => {
+
+            const badge = document.createElement("span");
+
+            badge.className =
+                "badge bg-secondary me-1 mb-1";
+
+            badge.style.cursor = "pointer";
+
+            badge.innerText = tag;
+
+            badge.onclick = () => {
+
+                const input =
+                    document.getElementById("appointmentTags");
+
+                const current = input.value
+                    .split(",")
+                    .map(t => t.trim())
+                    .filter(Boolean);
+
+                if (!current.includes(tag)) {
+
+                    current.push(tag);
+
+                    input.value = current.join(", ");
+                }
+            };
+
+            container.appendChild(badge);
+        });
+    }
+
 const modal = new bootstrap.Modal(
     document.getElementById("appointmentModal")
 );
@@ -436,7 +509,31 @@ function openNewAppointment(date) {
         new Date(date.getTime() + 60 * 60 * 1000)
     );
 
+    renderTagSuggestions();
+
     modal.show();
+}
+
+function updateTagSearchSuggestions() {
+
+    const list = document.getElementById("tagSearchList");
+    list.innerHTML = "";
+
+    const tags = new Set();
+
+    appointments.forEach(appt => {
+        (appt.tags || []).forEach(tag => tags.add(tag));
+    });
+
+    [...tags]
+        .sort()
+        .forEach(tag => {
+
+            const option = document.createElement("option");
+            option.value = tag;
+
+            list.appendChild(option);
+        });
 }
 
 function openEditAppointment(appt) {
@@ -464,6 +561,8 @@ function openEditAppointment(appt) {
         document.getElementById("appointmentColor").disabled = true;
         document.querySelector(".btn-secondary").innerText = "Octis";
     }
+
+    renderTagSuggestions();
 
     modal.show();
 }
@@ -518,6 +617,25 @@ document.getElementById("tagSearch").addEventListener("input", (e) => {
     renderCalendar(currentMonday);
 });
 
+document.getElementById("copyAppointment").onclick = () => {
+
+    if (!selectedAppointmentId) return;
+
+    const appt = appointments.find(a => a.id === selectedAppointmentId);
+
+    copiedAppointment = {
+        title: appt.title,
+        description: appt.description,
+        tags: [...(appt.tags || [])],
+        color: appt.color,
+        duration:
+            appt.end.toDate().getTime() -
+            appt.start.toDate().getTime()
+    };
+
+    modal.hide();
+};
+
 function getMonday(date) {
     const d = new Date(date);
     const day = d.getDay();
@@ -527,6 +645,17 @@ function getMonday(date) {
 
 function formatDate(date) {
     return date.toLocaleDateString("en-GB");
+}
+
+function getAllTags() {
+
+    const tags = new Set();
+
+    appointments.forEach(appt => {
+        (appt.tags || []).forEach(tag => tags.add(tag));
+    });
+
+    return [...tags].sort();
 }
 
 function toLocalInput(date) {
