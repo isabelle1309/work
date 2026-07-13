@@ -407,13 +407,23 @@ function renderEventsForDay(col, day) {
             `${pad(start.getHours())}:${pad(start.getMinutes())} - ` +
             `${pad(end.getHours())}:${pad(end.getMinutes())}`;
 
+        const startMinutes =
+            start.getHours() * 60 + start.getMinutes();
+
+        const endMinutes =
+            end.getHours() * 60 + end.getMinutes();
+
+        const hours = Math.floor((endMinutes - startMinutes) / 60);
+        const minutes = ((endMinutes - startMinutes) % 60);
+        const totalTime = `${hours}h ${minutes}m`;
+
         const tagsHtml = (appt.tags || [])
             .map(tag => `<span class="event-tag">${tag}</span>`)
             .join("");
 
         event.innerHTML = `
             <div class="event-title">${appt.title}</div>
-            <div class="event-time">${timeRange}</div>
+            <div class="event-time">${timeRange} | ${totalTime}</div>
 
             ${appt.description
                 ? `<div class="event-desc">${appt.description}</div>`
@@ -423,12 +433,6 @@ function renderEventsForDay(col, day) {
                 ? `<div class="event-tags">${tagsHtml}</div>`
                 : ""}
         `;
-
-        const startMinutes =
-            start.getHours() * 60 + start.getMinutes();
-
-        const endMinutes =
-            end.getHours() * 60 + end.getMinutes();
 
         const top = startMinutes - START_HOUR * 60;
         const height = Math.max(endMinutes - startMinutes, 10);
