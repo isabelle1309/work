@@ -81,8 +81,11 @@ async function loadWeek() {
     if (!user) return;
 
     const start = new Date(currentMonday);
+    start.setHours(0, 0, 0, 0);
+
     const end = new Date(currentMonday);
     end.setDate(end.getDate() + 7);
+    end.setHours(0, 0, 0, 0);
 
     document.getElementById("weekTitle").innerText =
         `${formatDate(start)} - ${formatDate(end)}`;
