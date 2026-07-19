@@ -87,7 +87,9 @@ async function loadWeek() {
     document.getElementById("weekTitle").innerText =
         `${formatDate(start)} - ${formatDate(end)}`;
 
-    await loadAppointments(user.uid);
+    await loadAppointments(user.uid, start, end);
+
+    console.log(getWeeklyWorkTime());
 
     updateTagSearchSuggestions();
 
@@ -115,12 +117,15 @@ function renderCurrentTimeLine(col, day) {
     col.appendChild(line);
 }
 
-async function loadAppointments(uid) {
+async function loadAppointments(uid, weekStart, weekEnd) {
 
     appointments = [];
 
     const q = query(
-        collection(db, "calendar")
+        collection(db, "calendar"),
+        where("uid", "==", uid),
+        where("start", "<", Timestamp.fromDate(weekEnd)),
+        where("end", ">", Timestamp.fromDate(weekStart))
     );
 
     const snap = await getDocs(q);
@@ -456,6 +461,37 @@ function renderEventsForDay(col, day) {
 
         col.appendChild(event);
     });
+}
+
+function getWeeklyWorkTime() {
+    let totalMinutes = 0;
+
+    const weekStart = new Date(currentMonday);
+    weekStart.setHours(0, 0, 0, 0);
+
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekEnd.getDate() + 7);
+
+    appointments.forEach(appt => {
+        const tags = appt.tags || [];
+
+        if (!tags.includes("work")) return;
+
+        const start = appt.start.toDate();
+        const end = appt.end.toDate();
+
+        if (start >= weekEnd || end <= weekStart) return;
+
+        const actualStart = start < weekStart ? weekStart : start;
+        const actualEnd = end > weekEnd ? weekEnd : end;
+
+        totalMinutes += (actualEnd - actualStart) / (1000 * 60);
+    });
+
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    return `${hours}h ${minutes}m`;
 }
 
 function renderTagSuggestions() {
