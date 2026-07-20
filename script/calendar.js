@@ -90,7 +90,7 @@ async function loadWeek() {
     document.getElementById("weekTitle").innerText =
         `${formatDate(start)} - ${formatDate(end)}`;
 
-    await loadAppointments(user.uid, start, end);
+    await loadAppointments(start, end);
 
     console.log(getWeeklyWorkTime());
 
@@ -120,13 +120,12 @@ function renderCurrentTimeLine(col, day) {
     col.appendChild(line);
 }
 
-async function loadAppointments(uid, weekStart, weekEnd) {
+async function loadAppointments(weekStart, weekEnd) {
 
     appointments = [];
 
     const q = query(
         collection(db, "calendar"),
-        where("uid", "==", uid),
         where("start", "<", Timestamp.fromDate(weekEnd)),
         where("end", ">", Timestamp.fromDate(weekStart))
     );
