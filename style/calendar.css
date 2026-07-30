@@ -20,6 +20,10 @@ button {
     font-weight: 500;
 }
 
+.container-fluid{
+    max-width: 1920px;
+}
+
 #calendarGrid {
     display: grid;
     grid-template-columns: 80px repeat(7, 1fr);
