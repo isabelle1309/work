@@ -12,6 +12,10 @@
     border-color: #e98ea3;
 }
 
-#countBtn, #resetBtn{
+#countBtn {
+    padding: 200px 0;
+}
+
+#resetBtn {
     padding: 50px 0;
 }
