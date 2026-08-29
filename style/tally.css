@@ -1,0 +1,17 @@
+.custom-navbar {
+    background-color: #8B6770;
+}
+
+.btn-primary {
+    background-color: #F5A9B8;
+    border-color: #FAD4DC;
+}
+
+.btn-primary:hover {
+    background-color: #e98ea3;
+    border-color: #e98ea3;
+}
+
+#countBtn, #resetBtn{
+    padding: 50px 0;
+}
