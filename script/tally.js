@@ -1,10 +1,69 @@
+const dict = {
+    0: 0,
+    1: 2.17391304,
+    2: 4.34782609,
+    3: 6.52173913,
+    4: 8.69565217,
+    5: 10.86956522,
+    6: 13.04347826,
+    7: 15.2173913,
+    8: 17.39130435,
+    9: 19.56521739,
+    10: 21.73913043,
+    11: 23.91304348,
+    12: 26.08695652,
+    13: 28.26086957,
+    14: 30.43478261,
+    15: 32.60869565,
+    16: 34.7826087,
+    17: 36.95652174,
+    18: 39.13043478,
+    19: 41.30434783,
+    20: 43.47826087,
+    21: 45.65217391,
+    22: 47.82608696,
+    23: 50,
+    24: 52.17391304,
+    25: 54.34782609,
+    26: 56.52173913,
+    27: 58.69565217,
+    28: 60.86956522,
+    29: 63.04347826,
+    30: 65.2173913,
+    31: 67.39130435,
+    32: 69.56521739,
+    33: 71.73913043,
+    34: 73.91304348,
+    35: 76.08695652,
+    36: 78.26086957,
+    37: 80.43478261,
+    38: 82.60869565,
+    39: 84.7826087,
+    40: 86.95652174,
+    41: 89.13043478,
+    42: 91.30434783,
+    43: 93.47826087,
+    44: 95.65217391,
+    45: 97.82608696,
+    46: 100
+};
+
+var counter = 0;
+
+
 const tallyEl = document.getElementById("countBtn");
-tallyEl.addEventListener("click",()=>{
-    var count = parseInt(tallyEl.innerText) + 1;
-    tallyEl.innerText = `${count}`;
+tallyEl.addEventListener("click", () => {
+    counter++;
+    if (!dict[counter])
+        return
+    if (counter == 1)
+        tallyEl.innerText = `${counter} hit, ${dict[counter].toFixed(2)}%`;
+    else
+        tallyEl.innerText = `${counter} hits, ${dict[counter].toFixed(2)}%`;
 })
 
 const resetEl = document.getElementById("resetBtn");
-resetEl.addEventListener("click",()=>{
+resetEl.addEventListener("click", () => {
     tallyEl.innerText = `0`;
+    counter = 0;
 })
