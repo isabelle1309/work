@@ -588,7 +588,11 @@ patternInputs.forEach((patternInput, index) => {
 
             patternInput.value =
                 patternInput.value.slice(0, 2);
+        }
 
+        if (patternInput.value && index < patternInputs.length - 1) {
+            patternInputs[index + 1].focus();
+            patternInputs[index + 1].select();
         }
         searchByPattern();
 
