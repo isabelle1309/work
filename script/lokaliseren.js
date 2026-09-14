@@ -452,7 +452,9 @@ function displayPatternFallback() {
 
     }
 
-    for (const item of brakeDiscs) {
+    const sortedBrakeDiscs = [...brakeDiscs].sort((a, b) => a.brand.localeCompare(b.brand));
+
+    for (const item of sortedBrakeDiscs) {
 
         if (item.identifiers.length === 0) {
             continue;
