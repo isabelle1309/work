@@ -19,7 +19,10 @@ const brakeDiscs = [
         identifiers: [
             "P331-069",
             "P330-063",
-            "P330-306"
+            "P330-306",
+			"P331-138",
+			"P330-035",
+			"PAL23-0010"
         ]
     },
 
@@ -27,7 +30,9 @@ const brakeDiscs = [
         brand: "Zimmermann",
         identifiers: [
             "100.3375.75",
-            "150.3482.20"
+            "150.3482.20",
+			"150.2905.20",
+			"150.2963.20"
         ]
     },
 
@@ -35,7 +40,9 @@ const brakeDiscs = [
         brand: "Textar",
         identifiers: [
             "92034203",
-            "92286103"
+            "92286103",
+			"92300903",
+			"92242203"
         ]
     },
 
@@ -43,7 +50,8 @@ const brakeDiscs = [
         brand: "Brembo",
         identifiers: [
             "09.C306.1X",
-            "08.C647.17"
+            "08.C647.17",
+			"08.7165.11"
         ]
     },
 
@@ -51,27 +59,36 @@ const brakeDiscs = [
         brand: "Valeo",
         identifiers: [
             "826362",
-            "828342"
+            "828342",
+			"836866",
+			"835211"
         ]
     },
 
     {
         brand: "Blue Print",
         identifiers: [
-            "ADW193048"
+            "ADW193048",
+			"ADV183098"
         ]
     },
 
     {
         brand: "SKF",
-        identifiers: []
+        identifiers: [
+			"VKJC 4591",
+			"VKJC 8166",
+			"VKM 38882",
+			"VKJC 5204"
+		]
     },
 
     {
         brand: "Schaeffler",
         identifiers: [
             "622 3336 00",
-            "628 3585 00"
+            "628 3585 00",
+			"619 3191 00"
         ]
     },
 
@@ -94,7 +111,45 @@ const brakeDiscs = [
         identifiers: [
             "302 346 001"
         ]
-    }
+    },
+	
+	{
+		brand: "Sachs",
+		identifiers: [
+            "3000 951 012",
+			"3000 951 481"
+        ]
+	},
+	
+	{
+		brand: "Meyle",
+		identifiers: [
+            "MCK0058HD",
+			"70-16 050 0039/HD"
+        ]
+	},
+	
+	{
+        brand: "GSP",
+        identifiers: [
+            "202077OL",
+			"203615"
+        ]
+    },
+	
+	{
+        brand: "Monroe",
+        identifiers: [
+            "V4510"
+        ]
+    },
+	
+	{
+        brand: "TYC",
+        identifiers: [
+            "20-1401-06-2"
+        ]
+    },
 ];
 
 const input = document.getElementById("identifierInput");
