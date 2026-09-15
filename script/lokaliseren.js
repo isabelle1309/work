@@ -10,7 +10,8 @@ const brakeDiscs = [
 			"0990-5107",
 			"0993-4250",
 			"Y089-68",
-			"N014-29"
+            "N014-29",
+            "K016-55"
         ]
     },
 
@@ -22,7 +23,8 @@ const brakeDiscs = [
             "P330-306",
 			"P331-138",
 			"P330-035",
-			"PAL23-0010"
+            "PAL23-0010",
+            "PAL9-0024"
         ]
     },
 
@@ -69,7 +71,15 @@ const brakeDiscs = [
         brand: "Blue Print",
         identifiers: [
             "ADW193048",
-			"ADV183098"
+            "ADV183098",
+            "ADR163006"
+        ]
+    },
+
+    {
+        brand: "Hella",
+        identifiers: [
+            "8LD 366 030-751"
         ]
     },
 
@@ -124,7 +134,6 @@ const brakeDiscs = [
 	{
 		brand: "Meyle",
 		identifiers: [
-            "MCK0058HD",
 			"70-16 050 0039/HD"
         ]
 	},
@@ -452,13 +461,13 @@ function displayPatternFallback() {
 
     }
 
-    const sortedBrakeDiscs = [...brakeDiscs].sort((a, b) => a.brand.localeCompare(b.brand));
+    html += `<div class="brand-overview">`;
+
+    const sortedBrakeDiscs = [...brakeDiscs]
+        .filter(item => item.identifiers.length > 0)
+        .sort((a, b) => a.brand.localeCompare(b.brand));
 
     for (const item of sortedBrakeDiscs) {
-
-        if (item.identifiers.length === 0) {
-            continue;
-        }
 
         const patterns = [];
 
@@ -483,28 +492,28 @@ function displayPatternFallback() {
         }
 
         html += `
-            <div class="card mb-2">
+            <div class="card brand-card">
 
-                <div class="card-body">
+                <div class="card-body p-2">
 
-                    <div class="fw-bold fs-5 mb-2">
+                    <div class="fw-bold mb-2">
                         <i class="bi bi-building"></i>
                         ${item.brand}
                     </div>
 
-                    <div class="d-flex flex-wrap gap-2">
+                    <div class="d-flex flex-column gap-1">
         `;
 
         for (const itemPattern of patterns) {
 
             html += `
-                <div class="border rounded p-2">
+                <div class="border rounded p-1">
 
-                    <code>
+                    <code class="brand-identifier">
                         ${itemPattern.identifier}
                     </code>
 
-                    <span class="badge text-bg-secondary ms-2">
+                    <span class="badge text-bg-secondary ms-1">
                         ${itemPattern.pattern.replaceAll("/", " / ")}
                     </span>
 
@@ -522,6 +531,15 @@ function displayPatternFallback() {
         `;
 
     }
+
+    const missingSlots =
+        (3 - (sortedBrakeDiscs.length % 3)) % 3;
+
+    for (let index = 0; index < missingSlots; index++) {
+        html += `<div class="brand-placeholder" aria-hidden="true"></div>`;
+    }
+
+    html += `</div>`;
 
     results.innerHTML = html;
 }

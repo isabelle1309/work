@@ -19,3 +19,29 @@
 #resetBtn {
     padding: 50px 0;
 }
+
+.brand-overview {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+}
+
+.brand-card {
+    min-width: 0;
+}
+
+.brand-placeholder {
+    min-height: 4.5rem;
+    border: 1px dashed var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+}
+
+.brand-identifier {
+    overflow-wrap: anywhere;
+}
+
+@media (min-width: 768px) {
+    .brand-overview {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
