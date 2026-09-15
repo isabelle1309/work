@@ -175,6 +175,8 @@ const formatCard = document.getElementById("formatCard");
 const formatDisplay = document.getElementById("formatDisplay");
 
 const results = document.getElementById("results");
+const scrollToAvailableBtn = document.getElementById("scrollToAvailableBtn");
+const scrollToBottomBtn = document.getElementById("scrollToBottomBtn");
 
 function normalize(value) {
 
@@ -562,7 +564,7 @@ function displayResults(matches) {
     const limitedMatches = matches.slice(0, 10);
 
     let html = `
-        <h5 class="mb-3">
+            <h5 id="availableBrakesHeading" class="mb-3">
             <i class="bi bi-list-check"></i>
             Mogelijke resultaten
         </h5>
@@ -702,6 +704,23 @@ patternInputs.forEach((patternInput, index) => {
         ) {
             patternInputs[index - 1].focus();
         }
+    });
+});
+
+scrollToAvailableBtn.addEventListener("click", () => {
+    const availableBrakesHeading =
+        document.getElementById("availableBrakesHeading");
+
+    (availableBrakesHeading || results).scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+});
+
+scrollToBottomBtn.addEventListener("click", () => {
+    window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: "smooth"
     });
 });
 

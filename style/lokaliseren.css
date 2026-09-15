@@ -40,6 +40,22 @@
     overflow-wrap: anywhere;
 }
 
+.scroll-controls {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 1030;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.scroll-control {
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    border-radius: 50%;
+}
+
 @media (min-width: 768px) {
     .brand-overview {
         grid-template-columns: repeat(3, minmax(0, 1fr));
