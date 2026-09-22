@@ -159,12 +159,14 @@ const brakeDiscs = [
             "20-1401-06-2"
         ]
     },
-];
 
-const input = document.getElementById("identifierInput");
-const clearBtn = document.getElementById("clearBtn");
-
-const patternInputs = [
+    {
+        brand: "TRW",
+        identifiers: [
+            "DF4406",
+            "DB4363MR"
+        ]
+    },
     document.getElementById("pattern1"),
     document.getElementById("pattern2"),
     document.getElementById("pattern3"),
