@@ -167,6 +167,12 @@ const brakeDiscs = [
             "DB4363MR"
         ]
     },
+];
+
+const input = document.getElementById("identifierInput");
+const clearBtn = document.getElementById("clearBtn");
+
+const patternInputs = [
     document.getElementById("pattern1"),
     document.getElementById("pattern2"),
     document.getElementById("pattern3"),
