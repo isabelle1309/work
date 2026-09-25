@@ -13,6 +13,21 @@
 }
 
 #weekTitle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-weight: 600;
+}
+
+#weekTitle .weekNumber {
+    font-size: 0.8em;
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+#weekTitle .weekDates {
+    font-size: 1.15em;
     font-weight: 600;
 }
 

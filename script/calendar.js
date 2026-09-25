@@ -87,8 +87,11 @@ async function loadWeek() {
     end.setDate(end.getDate() + 7);
     end.setHours(0, 0, 0, 0);
 
-    document.getElementById("weekTitle").innerText =
-        `${formatDate(start)} - ${formatDate(end)}`;
+    const weekNumber = getWeekNumber(start);
+    document.getElementById("weekTitle").innerHTML = `
+        <span class="weekNumber">Week ${weekNumber}</span>
+        <span class="weekDates">${formatDate(start)} - ${formatDate(end)}</span>
+    `;
 
     await loadAppointments(start, end);
 
@@ -693,6 +696,14 @@ function getMonday(date) {
     const day = d.getDay();
     const diff = d.getDate() - day + (day === 0 ? -6 : 1);
     return new Date(d.setDate(diff));
+}
+
+function getWeekNumber(date) {
+    const day = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const dayNum = day.getUTCDay() || 7;
+    day.setUTCDate(day.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(day.getUTCFullYear(), 0, 1));
+    return Math.ceil((((day - yearStart) / 86400000) + 1) / 7);
 }
 
 function formatDate(date) {
