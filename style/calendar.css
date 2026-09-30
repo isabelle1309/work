@@ -35,6 +35,24 @@ button {
     font-weight: 500;
 }
 
+.appointment-color-swatch {
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 50%;
+}
+
+.appointment-color-swatch[aria-pressed="true"] {
+    border-color: #212529;
+    box-shadow: 0 0 0 2px white inset;
+}
+
+.appointment-color-swatch:focus-visible {
+    outline: 2px solid #212529;
+    outline-offset: 2px;
+}
+
 #calendarGrid {
     display: grid;
     grid-template-columns: 80px repeat(7, 1fr);

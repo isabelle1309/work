@@ -543,6 +543,28 @@ const modal = new bootstrap.Modal(
     document.getElementById("appointmentModal")
 );
 
+const appointmentColorInput = document.getElementById("appointmentColor");
+const appointmentColorSwatches = document.querySelectorAll(".appointment-color-swatch");
+
+function setAppointmentColor(color) {
+    appointmentColorInput.value = color;
+
+    appointmentColorSwatches.forEach(button => {
+        button.setAttribute(
+            "aria-pressed",
+            String(button.dataset.appointmentColor.toLowerCase() === color.toLowerCase())
+        );
+    });
+}
+
+appointmentColorSwatches.forEach(button => {
+    button.onclick = () => setAppointmentColor(button.dataset.appointmentColor);
+});
+
+appointmentColorInput.addEventListener("input", () => {
+    setAppointmentColor(appointmentColorInput.value);
+});
+
 function openNewAppointment(date) {
 
     selectedAppointmentId = null;
@@ -550,7 +572,7 @@ function openNewAppointment(date) {
     document.getElementById("appointmentTitle").value = "";
     document.getElementById("appointmentDescription").value = "";
     document.getElementById("appointmentTags").value = "";
-    document.getElementById("appointmentColor").value = "#7a0035";
+    setAppointmentColor("#7a0035");
 
     document.getElementById("appointmentStart").value = toLocalInput(date);
     document.getElementById("appointmentEnd").value = toLocalInput(
@@ -592,7 +614,7 @@ function openEditAppointment(appt) {
     document.getElementById("appointmentDescription").value = appt.description || "";
     document.getElementById("appointmentTags").value =
         (appt.tags || []).join(", ");
-    document.getElementById("appointmentColor").value = appt.color || "#7a0035";
+    setAppointmentColor(appt.color || "#7a0035");
 
     document.getElementById("appointmentStart").value =
         toLocalInput(appt.start.toDate());
@@ -608,7 +630,8 @@ function openEditAppointment(appt) {
         document.getElementById("appointmentTags").disabled = true;
         document.getElementById("appointmentStart").disabled = true;
         document.getElementById("appointmentEnd").disabled = true;
-        document.getElementById("appointmentColor").disabled = true;
+        appointmentColorInput.disabled = true;
+        appointmentColorSwatches.forEach(button => button.disabled = true);
         document.querySelector(".btn-secondary").innerText = "Octis";
         const badge = document.querySelectorAll("#tagSuggestions span.badge");
         for (let index = 0; index < badge.length; index++) {
