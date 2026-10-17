@@ -1,0 +1,78 @@
+.custom-navbar {
+    background-color: #8B6770;
+}
+
+.page-heading {
+    border-bottom: 1px solid var(--bs-border-color);
+    padding-bottom: 1.25rem;
+}
+
+.page-heading h1 span {
+    font-size: 0.3em;
+}
+
+.eyebrow {
+    color: #5BCEFA;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.barcode-workspace {
+    display: grid;
+    grid-template-columns: minmax(250px, 0.8fr) minmax(0, 1.4fr);
+    gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: start;
+}
+
+.barcode-controls {
+    padding-top: 0.75rem;
+}
+
+.barcode-status {
+    min-height: 1.5rem;
+    color: var(--bs-secondary-color);
+    font-size: 0.9rem;
+}
+
+.preview-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.format-badge {
+    color: var(--bs-secondary-color);
+    border: 1px solid var(--bs-border-color);
+    padding: 0.2rem 0.5rem;
+    font-family: monospace;
+    font-size: 0.75rem;
+}
+
+.barcode-paper {
+    display: grid;
+    min-height: 220px;
+    padding: clamp(1rem, 4vw, 2.5rem);
+    place-items: center;
+    overflow-x: auto;
+    background: #ffffff;
+    border: 1px solid #d5d5d5;
+}
+
+.barcode-paper svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 767.98px) {
+    .barcode-workspace {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.5rem;
+    }
+
+    .barcode-controls {
+        padding-top: 0;
+    }
+}
