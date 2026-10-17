@@ -23,7 +23,6 @@ const HOUR_HEIGHT = 60;
 let currentMonday = getMonday(new Date());
 let appointments = [];
 let selectedAppointmentId = null;
-let currentTagFilter = "";
 let copiedAppointment = null;
 
 async function ensureUserDoc(user) {
@@ -96,8 +95,6 @@ async function loadWeek() {
     await loadAppointments(start, end);
 
     console.log(getWeeklyWorkTime());
-
-    updateTagSearchSuggestions();
 
     renderCalendar(start);
 }
@@ -342,18 +339,6 @@ function renderEventsForDay(col, day) {
     const dayAppointments = appointments
         .filter(appt => {
 
-            // Tag filter
-            if (currentTagFilter) {
-                const tags = appt.tags || [];
-
-                const matches = tags.some(tag =>
-                    tag.toLowerCase().includes(currentTagFilter)
-                );
-
-                if (!matches)
-                    return false;
-            }
-
             // Day filter
             const start = appt.start.toDate();
             const end = appt.end.toDate();
@@ -584,28 +569,6 @@ function openNewAppointment(date) {
     modal.show();
 }
 
-function updateTagSearchSuggestions() {
-
-    const list = document.getElementById("tagSearchList");
-    list.innerHTML = "";
-
-    const tags = new Set();
-
-    appointments.forEach(appt => {
-        (appt.tags || []).forEach(tag => tags.add(tag));
-    });
-
-    [...tags]
-        .sort()
-        .forEach(tag => {
-
-            const option = document.createElement("option");
-            option.value = tag;
-
-            list.appendChild(option);
-        });
-}
-
 function openEditAppointment(appt) {
 
     selectedAppointmentId = appt.id;
@@ -689,11 +652,6 @@ document.getElementById("deleteAppointment").onclick = async () => {
     modal.hide();
     loadWeek();
 };
-
-document.getElementById("tagSearch").addEventListener("input", (e) => {
-    currentTagFilter = e.target.value.trim().toLowerCase();
-    renderCalendar(currentMonday);
-});
 
 document.getElementById("copyAppointment").onclick = () => {
 

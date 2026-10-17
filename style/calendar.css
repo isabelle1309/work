@@ -188,6 +188,20 @@ button {
     border-color: #9de1fc10;
 }
 
+.prev-week-short {
+    display: none;
+}
+
+@media (max-width: 767.98px) {
+    .prev-week-long {
+        display: none;
+    }
+
+    .prev-week-short {
+        display: inline;
+    }
+}
+
 .today-column {
     background-color: rgba(255, 0, 98, 0.11) !important;
 }
