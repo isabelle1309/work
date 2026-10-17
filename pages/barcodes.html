@@ -21,6 +21,12 @@
 
         onAuthStateChanged(auth, (user) => {
             document.getElementById("appNavbar").hidden = !user;
+
+            const barcodeInput = document.getElementById("barcodeValue");
+            if (user && !barcodeInput.value) {
+                barcodeInput.value = "100";
+                barcodeInput.dispatchEvent(new Event("input", { bubbles: true }));
+            }
         });
     </script>
 </head>
@@ -76,7 +82,7 @@
         <div class="barcode-workspace">
             <section class="barcode-controls" aria-labelledby="barcodeInputHeading">
                 <h2 id="barcodeInputHeading" class="h5 mb-3">Barcode data</h2>
-                <input id="barcodeValue" class="form-control form-control-lg" type="text" value="100"
+                <input id="barcodeValue" class="form-control form-control-lg" type="text"
                     autocomplete="off" spellcheck="false" aria-describedby="barcodeStatus">
 
                 <div class="form-check mt-3">
