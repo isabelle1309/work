@@ -167,6 +167,14 @@ const brakeDiscs = [
             "DB4363MR"
         ]
     },
+
+    {
+        brand: "Febi",
+        identifiers: [
+            "1005241",
+            "1005266"
+        ]
+    },
 ];
 
 const input = document.getElementById("identifierInput");
