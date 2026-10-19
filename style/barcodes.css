@@ -29,10 +29,27 @@
     padding-top: 0.75rem;
 }
 
+.barcode-options {
+    grid-column: 2;
+}
+
 .barcode-status {
     min-height: 1.5rem;
     color: var(--bs-secondary-color);
     font-size: 0.9rem;
+}
+
+.barcode-history-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+}
+
+.barcode-history-list button {
+    max-width: 100%;
+    overflow-wrap: anywhere;
 }
 
 .preview-heading {
@@ -74,5 +91,9 @@
 
     .barcode-controls {
         padding-top: 0;
+    }
+
+    .barcode-options {
+        grid-column: 1;
     }
 }
