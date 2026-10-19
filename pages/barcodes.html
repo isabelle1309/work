@@ -21,6 +21,7 @@
 
         onAuthStateChanged(auth, (user) => {
             document.getElementById("appNavbar").hidden = !user;
+            document.getElementById("presetBarcode").hidden = !user;
 
             const barcodeInput = document.getElementById("barcodeValue");
             if (user && !barcodeInput.value) {
@@ -88,7 +89,7 @@
                 </div>
             </section>
             <section class="barcode-options" aria-label="Barcode options and history">
-                <button class="btn btn-outline-secondary mb-3" type="button" id="presetBarcode">
+                <button class="btn btn-outline-secondary mb-3" type="button" id="presetBarcode" hidden>
                     IBT ZONE 0
                 </button>
                 <div class="form-check mb-3">
