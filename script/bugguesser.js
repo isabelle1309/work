@@ -314,7 +314,7 @@ function renderResolvedRound() {
         return;
     }
 
-    nextButton.textContent = "Next silhouette";
+    nextButton.textContent = "Next bug";
     nextButton.hidden = false;
     nextButton.focus();
 }
