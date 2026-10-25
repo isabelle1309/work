@@ -37,6 +37,14 @@
 			<p class="game-intro" id="gameIntro">Study the silhouette. Which wanderer is hiding in the dark?</p>
 		</section>
 
+		<section class="hints-panel" aria-labelledby="hintsTitle">
+			<h2 id="hintsTitle">Hint</h2>
+			<ol class="hints-list" id="hintsList"></ol>
+			<button class="hint-button" id="hintButton" type="button">Reveal movement hint (-2 points)</button>
+			<button class="hint-button reveal-name-button" id="revealNameButton" type="button">Reveal name (-10
+				points)</button>
+		</section>
+
 		<section class="game-card" id="gameCard" aria-label="Character guessing game">
 			<div class="game-stats" aria-live="polite">
 				<p>Score <strong id="score">0</strong></p>
@@ -59,13 +67,6 @@
 					<button class="guess-button" type="submit">Guess</button>
 				</div>
 			</form>
-			<section class="hints-panel" aria-labelledby="hintsTitle">
-				<h2 id="hintsTitle">Hint</h2>
-				<ol class="hints-list" id="hintsList"></ol>
-				<button class="hint-button" id="hintButton" type="button">Reveal movement hint (-2 points)</button>
-				<button class="hint-button reveal-name-button" id="revealNameButton" type="button">Reveal name (-10
-					points)</button>
-			</section>
 			<button class="next-button" id="nextButton" type="button" hidden>Next bug</button>
 		</section>
 
