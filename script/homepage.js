@@ -1182,3 +1182,9 @@ function updateDateTime() {
 
 updateDateTime();
 setInterval(updateDateTime, 500);
+
+document.querySelectorAll("[data-navigation-target]").forEach((card) => {
+    card.addEventListener("click", () => {
+        window.location.href = card.dataset.navigationTarget;
+    });
+});

@@ -13,23 +13,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
     <script type="module" src="../script/barcodes.js"></script>
-
-    <script type="module">
-        import { auth } from "../script/firebase.js";
-        import { onAuthStateChanged }
-            from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-        onAuthStateChanged(auth, (user) => {
-            document.getElementById("appNavbar").hidden = !user;
-            document.getElementById("presetBarcode").hidden = !user;
-
-            const barcodeInput = document.getElementById("barcodeValue");
-            if (user && !barcodeInput.value) {
-                barcodeInput.value = "100";
-                barcodeInput.dispatchEvent(new Event("input", { bubbles: true }));
-            }
-        });
-    </script>
+    <script type="module" src="../script/barcodes-auth.js"></script>
 </head>
 
 <body>
@@ -108,16 +92,7 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="module">
-        import { auth } from "../script/firebase.js";
-        import { signOut }
-            from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-        document.getElementById("logoutBtn").onclick = async () => {
-            await signOut(auth);
-            window.location.href = "../index.html";
-        };
-    </script>
+    <script type="module" src="../script/logout.js"></script>
 </body>
 
 </html>

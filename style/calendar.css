@@ -43,6 +43,14 @@ button {
     border-radius: 50%;
 }
 
+.appointment-color-swatch[data-appointment-color="#008000"] {
+    background-color: #008000;
+}
+
+.appointment-color-swatch[data-appointment-color="#7A0035"] {
+    background-color: #7A0035;
+}
+
 .appointment-color-swatch[aria-pressed="true"] {
     border-color: #212529;
     box-shadow: 0 0 0 2px white inset;
