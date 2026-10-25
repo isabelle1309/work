@@ -962,6 +962,7 @@ export const characters = [
     {
         name: "Hollow Knight",
         image: `${imageBase}thumb/1/13/The_Hollow_Knight_Idle.png/300px-The_Hollow_Knight_Idle.png`,
+        aliases: ["HK", "THK", "The Hollow Knight"],
         hints: ["This bug walks."]
     },
     // B_Pure_Vessel.png
