@@ -162,6 +162,27 @@ button {
     text-overflow: ellipsis;
 }
 
+.appointment-description-checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.appointment-description-checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.appointment-description-checklist-item input {
+    flex: 0 0 auto;
+}
+
+.appointment-description-checklist-item span {
+    white-space: pre-wrap;
+}
+
 .modal-body input,
 .modal-body textarea {
     border-radius: 6px;

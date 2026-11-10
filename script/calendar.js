@@ -24,6 +24,9 @@ let currentMonday = getMonday(new Date());
 let appointments = [];
 let selectedAppointmentId = null;
 let copiedAppointment = null;
+const checklistSaveQueues = new Map();
+let appointmentDescriptionChecks = [];
+let renderedDescription = "";
 
 async function ensureUserDoc(user) {
 
@@ -133,9 +136,14 @@ async function loadAppointments(weekStart, weekEnd) {
     const snap = await getDocs(q);
 
     snap.forEach((docSnap) => {
+        const data = docSnap.data();
+
         appointments.push({
             id: docSnap.id,
-            ...docSnap.data()
+            ...data,
+            descriptionChecks: Array.isArray(data.descriptionChecks)
+                ? data.descriptionChecks.map(checked => checked === true)
+                : []
         });
     });
 }
@@ -266,6 +274,10 @@ function renderCalendar(weekStart) {
 
                 document.getElementById("appointmentDescription").value =
                     copiedAppointment.description;
+                renderDescriptionChecklist(
+                    copiedAppointment.description,
+                    copiedAppointment.descriptionChecks
+                );
 
                 document.getElementById("appointmentTags").value =
                     copiedAppointment.tags.join(", ");
@@ -453,6 +465,103 @@ function renderEventsForDay(col, day) {
     });
 }
 
+function getDescriptionItems(description) {
+    return (description || "")
+        .split(/\r?\n/)
+        .map(item => item.trim())
+        .filter(Boolean);
+}
+
+function getDescriptionChecks(description, previousDescription, previousChecks) {
+    const previousItems = getDescriptionItems(previousDescription);
+    const checksByItem = new Map();
+
+    previousItems.forEach((item, index) => {
+        const checks = checksByItem.get(item) || [];
+        checks.push(previousChecks[index] === true);
+        checksByItem.set(item, checks);
+    });
+
+    return getDescriptionItems(description).map(item => {
+        const checks = checksByItem.get(item);
+        return checks?.length ? checks.shift() : false;
+    });
+}
+
+function renderDescriptionChecklist(description, checks = []) {
+    const container = document.getElementById("appointmentDescriptionChecklist");
+    const items = getDescriptionItems(description);
+
+    renderedDescription = description || "";
+    appointmentDescriptionChecks = items.map((_, index) => checks[index] === true);
+    container.innerHTML = "";
+
+    items.forEach((item, index) => {
+        const label = document.createElement("label");
+        label.className = "appointment-description-checklist-item";
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = appointmentDescriptionChecks[index];
+        checkbox.setAttribute("aria-label", item);
+        checkbox.addEventListener("change", async () => {
+            const previousValue = appointmentDescriptionChecks[index];
+            appointmentDescriptionChecks[index] = checkbox.checked;
+
+            const appt = appointments.find(
+                appointment => appointment.id === selectedAppointmentId
+            );
+            if (!appt) return;
+
+            const previousChecks = appt.descriptionChecks;
+            appt.descriptionChecks = [...appointmentDescriptionChecks];
+
+            try {
+                await saveDescriptionChecks(appt);
+            } catch (error) {
+                appointmentDescriptionChecks[index] = previousValue;
+                appt.descriptionChecks = previousChecks;
+                checkbox.checked = previousValue;
+                console.error("Could not save appointment checklist.", error);
+                window.alert("Could not save checklist item. Please try again.");
+            }
+        });
+
+        const text = document.createElement("span");
+        text.textContent = item;
+
+        label.append(checkbox, text);
+        container.appendChild(label);
+    });
+}
+
+document.getElementById("appointmentDescription").addEventListener("input", event => {
+    const description = event.target.value;
+    const checks = getDescriptionChecks(
+        description,
+        renderedDescription,
+        appointmentDescriptionChecks
+    );
+    renderDescriptionChecklist(description, checks);
+});
+
+function saveDescriptionChecks(appt) {
+    const previousSave = checklistSaveQueues.get(appt.id) || Promise.resolve();
+    const save = previousSave.catch(() => {}).then(() =>
+        updateDoc(doc(db, "calendar", appt.id), {
+            descriptionChecks: [...appt.descriptionChecks]
+        })
+    );
+
+    checklistSaveQueues.set(appt.id, save);
+
+    return save.finally(() => {
+        if (checklistSaveQueues.get(appt.id) === save) {
+            checklistSaveQueues.delete(appt.id);
+        }
+    });
+}
+
 function getWeeklyWorkTime() {
     let totalMinutes = 0;
 
@@ -556,6 +665,7 @@ function openNewAppointment(date) {
 
     document.getElementById("appointmentTitle").value = "";
     document.getElementById("appointmentDescription").value = "";
+    renderDescriptionChecklist("");
     document.getElementById("appointmentTags").value = "";
     setAppointmentColor("#7a0035");
 
@@ -575,6 +685,7 @@ function openEditAppointment(appt) {
 
     document.getElementById("appointmentTitle").value = appt.title;
     document.getElementById("appointmentDescription").value = appt.description || "";
+    renderDescriptionChecklist(appt.description, appt.descriptionChecks);
     document.getElementById("appointmentTags").value =
         (appt.tags || []).join(", ");
     setAppointmentColor(appt.color || "#7a0035");
@@ -619,10 +730,19 @@ document.getElementById("saveAppointment").onclick = async () => {
         .map(t => t.trim().toLowerCase())
         .filter(t => t.length > 0);
 
+    const description = document.getElementById("appointmentDescription").value;
+    const existingAppointment = appointments.find(appt => appt.id === selectedAppointmentId);
+    const descriptionChecks = getDescriptionChecks(
+        description,
+        renderedDescription,
+        appointmentDescriptionChecks
+    );
+
     const data = {
         uid: user.uid,
         title: document.getElementById("appointmentTitle").value,
-        description: document.getElementById("appointmentDescription").value,
+        description,
+        descriptionChecks,
         color: document.getElementById("appointmentColor").value,
         tags: tags,
         start: Timestamp.fromDate(
@@ -662,6 +782,7 @@ document.getElementById("copyAppointment").onclick = () => {
     copiedAppointment = {
         title: appt.title,
         description: appt.description,
+        descriptionChecks: [...appt.descriptionChecks],
         tags: [...(appt.tags || [])],
         color: appt.color,
         duration:
